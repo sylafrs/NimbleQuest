@@ -25,6 +25,8 @@ public class Unit : MonoBehaviour {
     public Range range;
     public int cooldown;
 
+    public Group group;
+
     public virtual bool Attack(Unit target)
     {
         if (this.remainingCooldown > 0)
@@ -44,5 +46,10 @@ public class Unit : MonoBehaviour {
         {
             this.remainingCooldown -= Time.deltaTime;
         }
+    }
+
+    protected virtual void OnDying()
+    {
+        group.OnFellowDeath(this);
     }
 }
