@@ -9,19 +9,23 @@ using System.Collections.Generic;
   */
 public class Game : MonoBehaviour {
 
-    static HeroicGroup hg;
+    [System.Serializable]
+    public class Settings
+    {
+        public float speed = 1;
+    }
+
+    public Settings setSettings;
 
     public void Start()
     {
+        settings = this.setSettings;
         OnGameStart();
     }
 
-    public void Update()
-    {
-        hg.UpdateFellowPositions();
-    }
-
     // ---------------------------------------  //
+
+    public static Settings settings;
 
     public static void OnGameStart()
     {
@@ -30,7 +34,7 @@ public class Game : MonoBehaviour {
         Hero b = GameObject.Find("Knight").GetComponent<Hero>();
         Hero c = GameObject.Find("Mage").GetComponent<Hero>();
 
-        hg = new HeroicGroup(leader);
+        HeroicGroup hg = new HeroicGroup(leader);
         hg  .AddFellow(a)
             .AddFellow(b)
             .AddFellow(c);

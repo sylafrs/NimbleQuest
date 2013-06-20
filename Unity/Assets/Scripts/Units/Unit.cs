@@ -28,6 +28,27 @@ public class Unit : MonoBehaviour {
     public Range range;
     public int cooldown;
     public Group group;
+
+    public bool IsInGroup
+    {
+        get
+        {
+            return (group != null);
+        }
+    }
+
+    public bool IsLeader
+    {
+        get
+        {
+            if (!IsInGroup)
+            {
+                return false;
+            }
+
+            return (this == group.leader);
+        }
+    }
     
     public virtual bool Attack(Unit target)
     {
@@ -50,6 +71,18 @@ public class Unit : MonoBehaviour {
         }
 
         UpdateRotation();
+
+        if (IsInGroup)
+        {
+            if (IsLeader)
+            {
+                MoveForward();
+            }
+            else
+            {
+                UpdatePosition();
+            }
+        }
     }
 
     protected virtual void OnDying()
@@ -60,6 +93,17 @@ public class Unit : MonoBehaviour {
     private void UpdateRotation()
     {
         this.transform.forward = Vector3.Slerp(this.transform.forward, OrientationUtility.ToVector3(this.orientation), Time.deltaTime);
+    }
+
+    private void MoveForward()
+    {
+        Vector3 forward = OrientationUtility.ToVector3(this.orientation);
+        this.transform.position += forward * Game.settings.speed * Time.deltaTime;
+    }
+
+    private void UpdatePosition()
+    {
+
     }
 
     public void OnDrawGizmos()

@@ -20,6 +20,7 @@ public class Group {
         }
 
         this.leader = leader;
+        this.leader.group = this;
         this.fellows = new List<Unit>();
     }
 
@@ -84,10 +85,5 @@ public class Group {
         }
 
         throw new System.ArgumentException("Fellow in not in the group !");
-    }
-
-    public void UpdateFellowPositions()
-    {
-
     }
 }
