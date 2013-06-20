@@ -8,5 +8,5 @@ using System.Collections.Generic;
   * @see MonoBehaviour
   */
 public class HeroicGroup : Group {
-
+    public HeroicGroup(Hero leader) : base(leader) { }
 }

@@ -14,11 +14,16 @@ public class Group {
 
     public Group(Unit leader)
     {
+        if (leader == null)
+        {
+            throw new System.ArgumentNullException("Leader is null");
+        }
+
         this.leader = leader;
         this.fellows = new List<Unit>();
     }
 
-    public void AddFellow(Unit fellow)
+    public Group AddFellow(Unit fellow)
     {
         if (fellow == null)
         {
@@ -33,7 +38,31 @@ public class Group {
             throw new System.ArgumentException("Fellow is the leader !");
         }
 
+        fellow.group = this;
         this.fellows.Add(fellow);
+
+        return this;
+    }
+
+    public int GetUnitPosition(Unit fellow)
+    {
+        if (fellow == null)
+        {
+            throw new System.ArgumentNullException("Fellow is null");
+        }
+
+        if (fellow == leader)
+        {
+            return 0;
+        }
+
+        int position = this.fellows.IndexOf(fellow);
+        if (position == -1)
+        {
+            throw new System.ArgumentException("Fellow is not within the group");
+        }
+
+        return position+1;
     }
 
     public void OnFellowDeath(Unit fellow)
@@ -55,5 +84,10 @@ public class Group {
         }
 
         throw new System.ArgumentException("Fellow in not in the group !");
+    }
+
+    public void UpdateFellowPositions()
+    {
+
     }
 }
