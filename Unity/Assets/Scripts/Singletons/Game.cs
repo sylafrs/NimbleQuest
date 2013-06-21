@@ -12,13 +12,17 @@ public class Game : MonoBehaviour {
     [System.Serializable]
     public class Settings
     {
-        public float speed = 1;
-        public float heroSpeed = 5;
-        public float distanceUnits = 2;
-        public float rotationSpeed = 3;
-        public float fellowSmoothSpeed = 1;
+        public  float   speed               = 1;    //< Vitesse de base des unités
+        public  float   heroSpeed           = 5;    //< Vitesse d'un heros
+        public  float   distanceUnits       = 2;    //< Distance entre chaque unité
+        public  float   rotationSpeed       = 3;    //< Vitesse de la rotation (smooth)
+        public  float   fellowSmoothSpeed   = 1;    //< Vitesse d'un compagnion (smooth)
+        public  int     maxMonsterGroups    = 5;    //< Nombre maximum de groupe de monstre
+        public  float   minSpawnTime        = 10;   //< Temps minimum à attendre entre deux spawns
+        public AnimationCurve spawnChancesOverTime;
 
-        public Hero[] herosPrefabs;
+        public  Hero[]  heroesPrefabs;              //< Prefab des unités jouables
+        public  Enemy[] monsterPrefabs;             //< Prefab des unités ennemies
     }
 
     public Settings setSettings;
@@ -73,6 +77,8 @@ public class Game : MonoBehaviour {
         leader.transform.parent = heroes;
         leader.name = selectedLeader.name;
         hg = new HeroicGroup(leader.GetComponent<Hero>());
+
+        instance.gameObject.AddComponent<MonsterManager>();
         instance.gameObject.AddComponent<InputManager>();
 
         Camera.main.GetComponent<FollowOffset>().target = leader.transform;

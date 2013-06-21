@@ -24,7 +24,7 @@ public class ChooseLeaderScene : MonoBehaviour {
 
             GUILayout.Label("Choose hero : ");
             GUILayout.BeginHorizontal();
-            foreach(var u in Game.settings.herosPrefabs) {
+            foreach(var u in Game.settings.heroesPrefabs) {
                 if (u == selected) GUI.color = Color.red;
                 if (GUILayout.Button(u.name))
                 {
