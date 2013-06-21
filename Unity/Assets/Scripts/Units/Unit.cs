@@ -94,7 +94,6 @@ public class Unit : MonoBehaviour {
 
     private void UpdateOrientation()
     {
-        const float epsilon = 0.01f;
         Group.FellowPath path = this.group.fellowPaths[this];
 
         if (path.checkpoints.Count > 0)

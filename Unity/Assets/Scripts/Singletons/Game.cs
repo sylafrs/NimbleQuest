@@ -25,10 +25,11 @@ public class Game : MonoBehaviour {
         public  Enemy[] monsterPrefabs;             //< Prefab des unités ennemies
     }
 
-    public Settings setSettings;
-    public static Game instance { get; private set; }
+    public Settings setSettings;    
+    private Level level;
+    private MonsterManager monsters;
 
-    public void Awake()
+    private void Awake()
     {
         GameObject.DontDestroyOnLoad(this.gameObject);
         settings = this.setSettings;
@@ -36,7 +37,7 @@ public class Game : MonoBehaviour {
         instance = this;
     }
 
-    public void OnLevelWasLoaded(int level)
+    private void OnLevelWasLoaded(int level)
     {
         if (level == 2)
         {
@@ -44,49 +45,60 @@ public class Game : MonoBehaviour {
         }
     }
 
-    // ---------------------------------------  //
-
-    public static bool started = false;
-    public static Settings settings;
-    public static HeroicGroup hg;
-
-    private static Hero selectedLeader;
-
-    public static void LaunchGame(Hero selectedLeader)
+    private void OnMainSceneLoaded()
     {
-        Game.selectedLeader = selectedLeader;
-        Application.LoadLevelAsync("scene");        
+        CreateHeroicGroup();
+
+        monsters = instance.gameObject.AddComponent<MonsterManager>();
+        instance.gameObject.AddComponent<InputManager>();
+
+        Camera.main.GetComponent<FollowOffset>().target = hg.leader.transform;
     }
 
-    private static void OnMainSceneLoaded()
+    private void CreateHeroicGroup()
     {
         GameObject leader = GameObject.Instantiate(selectedLeader.gameObject) as GameObject;
         if (leader == null)
             throw new UnityException("Can't instantiate " + selectedLeader.name);
-
-        //leader.transform.parent = GameObject.Find("Heros").transform;//GameObject.Find("Units").transform.FindChild("Heros");
 
         GameObject units = GameObject.Find("Units");
         if (units == null)
             throw new System.MissingMemberException("Missing 'Units' gameobject");
 
         Transform heroes = units.transform.FindChild("Heroes");
-        if(heroes == null)
+        if (heroes == null)
             throw new System.MissingMemberException("Missing 'Units/Heroes' gameobject");
 
         leader.transform.parent = heroes;
         leader.name = selectedLeader.name;
+
         hg = new HeroicGroup(leader.GetComponent<Hero>());
-
-        instance.gameObject.AddComponent<MonsterManager>();
-        instance.gameObject.AddComponent<InputManager>();
-
-        Camera.main.GetComponent<FollowOffset>().target = leader.transform;
     }
 
+    // ---------------------------------------  //
+
+    public static Game instance { get; private set; }
+
+    public static bool started = false;
+    public static Settings settings;
+    public static HeroicGroup hg;
+
+    private static Hero selectedLeader;
+    
+    public static void LaunchGame(Hero selectedLeader)
+    {
+        Game.selectedLeader = selectedLeader;
+        Application.LoadLevelAsync("scene");        
+    }
+    
     public static void OnLeaderDeath()
     {
         OnGameOver();
+    }
+
+    public static void OnBossDeath(Enemy e)
+    {
+        instance.monsters.OnBossDeath(e);
     }
     
     public static void OnGameOver()

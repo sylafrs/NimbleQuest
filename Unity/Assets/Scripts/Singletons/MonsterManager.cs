@@ -50,6 +50,11 @@ public class MonsterManager : MonoBehaviour {
 
     public void SpawnMonsterGroup()
     {
+        //Vector3 pos;
+    }
+    
+    public void OnBossDeath(Enemy e)
+    {
 
     }
 }
