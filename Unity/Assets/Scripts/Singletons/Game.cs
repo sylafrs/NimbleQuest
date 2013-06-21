@@ -74,6 +74,8 @@ public class Game : MonoBehaviour {
         leader.name = selectedLeader.name;
         hg = new HeroicGroup(leader.GetComponent<Hero>());
         instance.gameObject.AddComponent<InputManager>();
+
+        Camera.main.GetComponent<FollowOffset>().target = leader.transform;
     }
 
     public static void OnLeaderDeath()
