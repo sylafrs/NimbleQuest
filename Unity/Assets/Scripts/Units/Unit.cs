@@ -149,6 +149,7 @@ public class Unit : MonoBehaviour {
             throw new System.InvalidOperationException("This guy is the leader");
         }
 
+        // A remplacer par : if le checkpoint du précédent est le meme que le mien.
         if (previous.orientation == this.orientation)
         {
             Vector3 previousPosition = previous.transform.position;
