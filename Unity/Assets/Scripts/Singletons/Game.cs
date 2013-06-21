@@ -13,32 +13,38 @@ public class Game : MonoBehaviour {
     public class Settings
     {
         public float speed = 1;
+        public float heroSpeed = 5;
+        public float distanceUnits = 2;
+        public float rotationSpeed = 3;
+        public float fellowSmoothSpeed = 1;
     }
 
     public Settings setSettings;
 
-    public void Start()
+    public void Awake()
     {
         settings = this.setSettings;
-        OnGameStart();
     }
 
-    // ---------------------------------------  //
-
-    public static Settings settings;
-
-    public static void OnGameStart()
+    public void Start()
     {
         Hero leader = GameObject.Find("Warrior").GetComponent<Hero>();
         Hero a = GameObject.Find("Archer").GetComponent<Hero>();
         Hero b = GameObject.Find("Knight").GetComponent<Hero>();
         Hero c = GameObject.Find("Mage").GetComponent<Hero>();
 
-        HeroicGroup hg = new HeroicGroup(leader);
+        hg = new HeroicGroup(leader);
         hg  .AddFellow(a)
             .AddFellow(b)
             .AddFellow(c);
+
+        this.gameObject.AddComponent<InputManager>();
     }
+
+    // ---------------------------------------  //
+
+    public static Settings settings;
+    public static HeroicGroup hg;
 
     public static void OnLeaderDeath()
     {
@@ -48,5 +54,15 @@ public class Game : MonoBehaviour {
     public static void OnGameOver()
     {
 
+    }
+
+    public static void OnDirectionKey(Orientation o)
+    {
+        hg.NewOrientation(o);
+    }
+
+    public static void OnUnitHitsWall(Unit u)
+    {
+        //this.transform.localPosition = Vector3.zero;
     }
 }

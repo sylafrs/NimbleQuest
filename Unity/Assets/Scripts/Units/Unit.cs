@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-using Orientation = OrientationAbsolute;
 
 /**
   * @class Unit
@@ -28,6 +27,8 @@ public class Unit : MonoBehaviour {
     public Range range;
     public int cooldown;
     public Group group;
+
+    public float speed;
 
     public bool IsInGroup
     {
@@ -81,6 +82,7 @@ public class Unit : MonoBehaviour {
             else
             {
                 UpdatePosition();
+                UpdateOrientation();                
             }
         }
     }
@@ -90,20 +92,76 @@ public class Unit : MonoBehaviour {
         group.OnFellowDeath(this);
     }
 
+    private void UpdateOrientation()
+    {
+        const float epsilon = 0.01f;
+        Group.FellowPath path = this.group.fellowPaths[this];
+
+        if (path.checkpoints.Count > 0)
+        {
+            Group.FellowPath.CheckPoint cp = path.checkpoints.Peek();
+
+            bool change = false;
+            switch (this.orientation)
+            {
+                case Orientation.EAST:
+                    change = (this.transform.position.x >= cp.position.x);// || Mathf.Abs(this.transform.position.x - cp.position.x) <= epsilon);
+                    break;                                               
+                                                                         
+                case Orientation.NORTH:                                  
+                    change = (this.transform.position.z >= cp.position.z);// || Mathf.Abs(this.transform.position.z - cp.position.z) <= epsilon);
+                    break;                                               
+                                                                         
+                case Orientation.SOUTH:                                  
+                    change = (this.transform.position.z <= cp.position.z);// || Mathf.Abs(this.transform.position.z - cp.position.z) <= epsilon);
+                    break;                                               
+                                                                         
+                case Orientation.WEST:                                   
+                    change = (this.transform.position.x <= cp.position.x);// || Mathf.Abs(this.transform.position.x - cp.position.x) <= epsilon);
+                    break;
+            }
+
+            if (change)
+            {
+                path.checkpoints.Dequeue();
+                this.orientation = cp.orientation;
+            }
+        }
+    }
+
     private void UpdateRotation()
     {
-        this.transform.forward = Vector3.Slerp(this.transform.forward, OrientationUtility.ToVector3(this.orientation), Time.deltaTime);
+        this.transform.forward = Vector3.Slerp(this.transform.forward, OrientationUtility.ToVector3(this.orientation), Time.deltaTime * Game.settings.rotationSpeed);
     }
 
     private void MoveForward()
     {
         Vector3 forward = OrientationUtility.ToVector3(this.orientation);
-        this.transform.position += forward * Game.settings.speed * Time.deltaTime;
+        this.transform.position += forward * Game.settings.speed * speed * Time.deltaTime;
     }
 
     private void UpdatePosition()
     {
+        int position = this.group.GetUnitPosition(this);
+        Unit previous = this.group.GetUnitAtPosition(position - 1);
+        if (previous == null)
+        {
+            throw new System.InvalidOperationException("This guy is the leader");
+        }
 
+        if (previous.orientation == this.orientation)
+        {
+            Vector3 previousPosition = previous.transform.position;
+            Vector3 space = OrientationUtility.ToVector3(this.orientation) * Game.settings.distanceUnits;
+            Vector3 idealPosition = previousPosition - space;
+
+            //this.transform.position = idealPosition;
+            this.transform.position = Vector3.Lerp(this.transform.position, idealPosition, Time.deltaTime * Game.settings.fellowSmoothSpeed);
+        }
+        else
+        {
+            MoveForward();
+        }
     }
 
     public void OnDrawGizmos()
@@ -118,4 +176,18 @@ public class Unit : MonoBehaviour {
             this.transform.position + (this.transform.forward * len) + (Vector3.up * up)
         );
     }
+
+    protected virtual void OnTriggerExit(Collider trigger) {
+        if(trigger.name.Equals("Walls")) {
+            Game.OnUnitHitsWall(this);
+        }
+    }
+
+    //public void OnGUI()
+    //{
+    //    if (IsLeader)
+    //    {
+    //        this.group.OnGUI();
+    //    }
+    //}
 }
