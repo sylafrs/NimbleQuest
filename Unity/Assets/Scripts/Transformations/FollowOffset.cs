@@ -14,10 +14,13 @@ public class FollowOffset : MonoBehaviour {
     
     public void Update()
     {
-        this.transform.position = Vector3.Lerp(
-            this.transform.position, 
-            target.transform.position + offset, 
-            Time.deltaTime * smoothSpeed
-        );
+        if (target != null)
+        {  
+            this.transform.position = Vector3.Lerp(
+                this.transform.position,
+                target.transform.position + offset,
+                Time.deltaTime * smoothSpeed
+            );
+        }
     }
 }
