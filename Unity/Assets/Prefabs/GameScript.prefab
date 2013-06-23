@@ -46,9 +46,10 @@ MonoBehaviour:
     maxMonsterGroups: 5
     minSpawnTime: 5
     checkSpawnTime: .150000006
-    spawnMargin: 5
+    spawnMargin: 10
     maxMonsterGroupCapacity: 3
-    dontMoveHero: 0
+    securityMargin: 5
+    dontMoveHero: 1
     spawnChancesOverTime:
       serializedVersion: 2
       m_Curve:

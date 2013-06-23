@@ -120,16 +120,15 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2e5b748178e6da44aac521634e42da58, type: 3}
   m_Name: 
-  orientation: 0
-  maxHealth: 1
-  force: 0
+  force: 60
   range:
-    field: 0
-    angle: 0
-    infinite: 0
-    range: 0
-  cooldown: 0
-  speed: 0
+    field: 1
+    angle: 45
+    distance: 2
+  attackSpeed: -1
+  cooldown: 1
+  maxHealth: 200
+  orientation: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

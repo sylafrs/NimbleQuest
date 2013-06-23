@@ -10,6 +10,15 @@ using System.Collections.Generic;
   */
 public abstract class Unit : MonoBehaviour {
 
+    public int force;
+    public Range range;
+    public float attackSpeed;
+    public float cooldown;
+    public int maxHealth;
+
+    protected float speed;
+    private float remainingCooldown;
+
     private int health;
     public int Health
     {
@@ -18,18 +27,19 @@ public abstract class Unit : MonoBehaviour {
             return this.health;
         }
     }
+    public int HealthPercent
+    {
+        get
+        {
+            if (this.maxHealth <= 0) return 0;
+            return this.health / this.maxHealth;
+        }
+    }
 
-    private float remainingCooldown;
-
-    public Orientation orientation;
-    public int maxHealth;
-    public int force;
-    public Range range;
-    public int cooldown;
+    [HideInInspector]
+    public Orientation orientation;    
     public Group group;
-
-    public float speed;
-
+    
     public bool IsInGroup
     {
         get
@@ -50,7 +60,12 @@ public abstract class Unit : MonoBehaviour {
             return (this == group.leader);
         }
     }
-    
+
+    protected virtual void Start()
+    {
+        this.health = this.maxHealth;
+    }
+
     public virtual bool Attack(Unit target)
     {
         if (this.remainingCooldown > 0)

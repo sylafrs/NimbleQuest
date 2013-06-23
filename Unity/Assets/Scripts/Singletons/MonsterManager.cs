@@ -11,12 +11,11 @@ public class MonsterManager : MonoBehaviour {
     
     private float               previousCheckTime;
     private float               previousSpawnTime;
-    private List<MonsterGroup>  mobs;
     private Transform           mobsParent;
     
     public void Awake()
     {
-        mobs = new List<MonsterGroup>();
+        Game.monsterGroups = new List<MonsterGroup>();
         previousSpawnTime = Time.time - Game.settings.minSpawnTime;
         previousCheckTime = Time.time;
 
@@ -39,7 +38,7 @@ public class MonsterManager : MonoBehaviour {
         float elapsedTime = currentTime - previousSpawnTime;
         float checkElapsedTime = currentTime - previousCheckTime;
 
-        if (mobs.Count < Game.settings.maxMonsterGroups)
+        if (Game.monsterGroups.Count < Game.settings.maxMonsterGroups)
         {
             if (elapsedTime >= Game.settings.minSpawnTime)
             {
@@ -87,7 +86,7 @@ public class MonsterManager : MonoBehaviour {
             boss.transform.position = pos;
 
             MonsterGroup group = new MonsterGroup(boss);
-            mobs.Add(group);
+            Game.monsterGroups.Add(group);
 
             int maxMonsters = Mathf.Max(1, Game.settings.maxMonsterGroupCapacity);
 
@@ -127,6 +126,6 @@ public class MonsterManager : MonoBehaviour {
     public void OnBossDeath(MonsterGroup e)
     {
         previousSpawnTime = Time.time; // Don't spawn now.
-        this.mobs.Remove(e);
+        Game.monsterGroups.Remove(e);
     }
 }

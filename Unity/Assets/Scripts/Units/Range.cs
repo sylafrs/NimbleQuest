@@ -13,14 +13,12 @@ public class Range {
     public enum FIELD
     {
         NONE,
-        ANGLE,
+        CIRCLE,
         FORWARD,
         GROUP
     }
 
     public FIELD field;
     public int angle;
-
-    public bool infinite;
-    public int range;
+    public int distance;
 }

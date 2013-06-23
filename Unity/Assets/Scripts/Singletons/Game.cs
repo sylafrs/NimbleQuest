@@ -13,23 +13,21 @@ public class Game : MonoBehaviour
     [System.Serializable]
     public class Settings
     {
-        public float speed = 1;             //< Vitesse de base des unités
-        public float heroSpeed = 5;         //< Vitesse d'un heros
-        public float distanceUnits = 2;     //< Distance entre chaque unité
-        public float rotationSpeed = 3;     //< Vitesse de la rotation (smooth)
-        public float fellowSmoothSpeed = 1; //< Vitesse d'un compagnion (smooth)
-        public int maxMonsterGroups = 5;    //< Nombre maximum de groupe de monstre
-        public float minSpawnTime = 10;     //< Temps minimum à attendre entre deux spawns
-        public float checkSpawnTime = 0.1f; //< Temps entre deux lancés de dé pour le spawn (0 = chaque frame)
-        public int spawnMargin = 2;         //< Marge au limites du sol, où les monstres ne spawneront pas
-        public int maxMonsterGroupCapacity = 3; //< Taille max. d'un groupe de monstres
-
-        public bool dontMoveHero = false;   //< Don't move our hero
-
+        public float speed = 1;                     //< Vitesse de base des unités
+        public float heroSpeed = 5;                 //< Vitesse d'un heros
+        public float distanceUnits = 2;             //< Distance entre chaque unité
+        public float rotationSpeed = 3;             //< Vitesse de la rotation (smooth)
+        public float fellowSmoothSpeed = 1;         //< Vitesse d'un compagnion (smooth)
+        public int maxMonsterGroups = 5;            //< Nombre maximum de groupe de monstre
+        public float minSpawnTime = 10;             //< Temps minimum à attendre entre deux spawns
+        public float checkSpawnTime = 0.1f;         //< Temps entre deux lancés de dé pour le spawn (0 = chaque frame)
+        public int spawnMargin = 2;                 //< Marge au limites du sol, où les monstres ne spawneront pas
+        public int maxMonsterGroupCapacity = 3;     //< Taille max. d'un groupe de monstres
+        public int securityMargin = 1;              //< Marge dans laquelle les monstres n'iront pas        
+        public bool dontMoveHero = false;           //< Don't move our hero
         public AnimationCurve spawnChancesOverTime; //< Courbe : Chances qu'un monstre spawn dans le temps, une fois le temps min. dépassé.
-
-        public Hero[] heroesPrefabs;              //< Prefab des unités jouables
-        public Monster[] monsterPrefabs;          //< Prefab des unités ennemies
+        public Hero[] heroesPrefabs;                //< Prefab des unités jouables
+        public Monster[] monsterPrefabs;            //< Prefab des unités ennemies
     }
 
     public Settings setSettings;
@@ -88,6 +86,7 @@ public class Game : MonoBehaviour
     public static bool started = false;
     public static Settings settings;
     public static HeroicGroup hg;
+    public static List<MonsterGroup> monsterGroups;
 
     private static Hero selectedLeader;
 

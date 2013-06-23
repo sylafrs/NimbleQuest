@@ -8,8 +8,9 @@ using System.Collections.Generic;
   * @see MonoBehaviour
   */
 public class Hero : Unit {
-    public void Start()
+    protected override void Start()
     {
         this.speed = Game.settings.heroSpeed;
+        base.Start();
     }
 }
