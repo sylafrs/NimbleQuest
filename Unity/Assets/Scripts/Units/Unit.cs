@@ -8,7 +8,7 @@ using System.Collections.Generic;
   * @author Sylvain Lafon
   * @see MonoBehaviour
   */
-public class Unit : MonoBehaviour {
+public abstract class Unit : MonoBehaviour {
 
     private int health;
     public int Health
@@ -133,12 +133,19 @@ public class Unit : MonoBehaviour {
         this.transform.forward = Vector3.Slerp(this.transform.forward, OrientationUtility.ToVector3(this.orientation), Time.deltaTime * Game.settings.rotationSpeed);
     }
 
+    protected float GetSpeed()
+    {
+        return Game.settings.speed * speed * Time.deltaTime;
+    }
+
     private void MoveForward()
     {
-        // if (this is Hero) return; // [DEBUG : Don't move our leader]
+        if (Game.settings.dontMoveHero && this is Hero) return;
+
+        this.BeforeMoveForward();
 
         Vector3 forward = OrientationUtility.ToVector3(this.orientation);
-        this.transform.position += forward * Game.settings.speed * speed * Time.deltaTime;
+        this.transform.position += forward * GetSpeed();
     }
 
     private void UpdatePosition()
@@ -183,6 +190,11 @@ public class Unit : MonoBehaviour {
         if(trigger.name.Equals("Walls")) {
             Game.OnUnitHitsWall(this);
         }
+    }
+
+    protected virtual void BeforeMoveForward()
+    {
+
     }
 
     //public void OnGUI()

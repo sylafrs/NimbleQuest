@@ -69,14 +69,9 @@ public class MonsterManager : MonoBehaviour {
 
     public void SpawnMonsterGroup()
     {
-        GameObject floor = GameObject.Find("Level/Floor") as GameObject;
-        if (floor == null)
-        {
-            throw new UnityException("I need the Level/Floor object");
-        }
-
-        Vector3 min = floor.renderer.bounds.min;
-        Vector3 max = floor.renderer.bounds.max;
+        Vector3 min, max;
+        Game.GetMinMaxLevel(out min, out max);
+        
         int margin = Game.settings.spawnMargin;
 
         // Gets a random position within the level area

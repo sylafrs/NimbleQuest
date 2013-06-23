@@ -24,6 +24,8 @@ public class Game : MonoBehaviour
         public int spawnMargin = 2;         //< Marge au limites du sol, où les monstres ne spawneront pas
         public int maxMonsterGroupCapacity = 3; //< Taille max. d'un groupe de monstres
 
+        public bool dontMoveHero = false;   //< Don't move our hero
+
         public AnimationCurve spawnChancesOverTime; //< Courbe : Chances qu'un monstre spawn dans le temps, une fois le temps min. dépassé.
 
         public Hero[] heroesPrefabs;              //< Prefab des unités jouables
@@ -88,6 +90,17 @@ public class Game : MonoBehaviour
     public static HeroicGroup hg;
 
     private static Hero selectedLeader;
+
+    public static void GetMinMaxLevel(out Vector3 min, out Vector3 max) {
+        GameObject floor = GameObject.Find("Level/Floor") as GameObject;
+        if (floor == null)
+        {
+            throw new UnityException("I need the Level/Floor object");
+        }
+
+        min = floor.renderer.bounds.min;
+        max = floor.renderer.bounds.max;
+    }
 
     public static void LaunchGame(Hero selectedLeader)
     {

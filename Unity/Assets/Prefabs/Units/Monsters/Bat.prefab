@@ -129,7 +129,7 @@ MonoBehaviour:
     infinite: 0
     range: 0
   cooldown: 0
-  speed: 0
+  speed: 2
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
