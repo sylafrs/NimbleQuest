@@ -7,26 +7,30 @@ using System.Collections.Generic;
   * @author Sylvain Lafon
   * @see MonoBehaviour
   */
-public class Game : MonoBehaviour {
+public class Game : MonoBehaviour
+{
 
     [System.Serializable]
     public class Settings
     {
-        public  float   speed               = 1;    //< Vitesse de base des unit�s
-        public  float   heroSpeed           = 5;    //< Vitesse d'un heros
-        public  float   distanceUnits       = 2;    //< Distance entre chaque unit�
-        public  float   rotationSpeed       = 3;    //< Vitesse de la rotation (smooth)
-        public  float   fellowSmoothSpeed   = 1;    //< Vitesse d'un compagnion (smooth)
-        public  int     maxMonsterGroups    = 5;    //< Nombre maximum de groupe de monstre
-        public  float   minSpawnTime        = 10;   //< Temps minimum � attendre entre deux spawns
-        public AnimationCurve spawnChancesOverTime;
+        public float speed = 1;             //< Vitesse de base des unités
+        public float heroSpeed = 5;         //< Vitesse d'un heros
+        public float distanceUnits = 2;     //< Distance entre chaque unité
+        public float rotationSpeed = 3;     //< Vitesse de la rotation (smooth)
+        public float fellowSmoothSpeed = 1; //< Vitesse d'un compagnion (smooth)
+        public int maxMonsterGroups = 5;    //< Nombre maximum de groupe de monstre
+        public float minSpawnTime = 10;     //< Temps minimum à attendre entre deux spawns
+        public float checkSpawnTime = 0.1f; //< Temps entre deux lancés de dé pour le spawn (0 = chaque frame)
+        public int spawnMargin = 2;         //< Marge au limites du sol, où les monstres ne spawneront pas
+        public int maxMonsterGroupCapacity = 3; //< Taille max. d'un groupe de monstres
 
-        public  Hero[]  heroesPrefabs;              //< Prefab des unit�s jouables
-        public  Enemy[] monsterPrefabs;             //< Prefab des unit�s ennemies
+        public AnimationCurve spawnChancesOverTime; //< Courbe : Chances qu'un monstre spawn dans le temps, une fois le temps min. dépassé.
+
+        public Hero[] heroesPrefabs;              //< Prefab des unités jouables
+        public Monster[] monsterPrefabs;          //< Prefab des unités ennemies
     }
 
-    public Settings setSettings;    
-    private Level level;
+    public Settings setSettings;
     private MonsterManager monsters;
 
     private void Awake()
@@ -84,23 +88,23 @@ public class Game : MonoBehaviour {
     public static HeroicGroup hg;
 
     private static Hero selectedLeader;
-    
+
     public static void LaunchGame(Hero selectedLeader)
     {
         Game.selectedLeader = selectedLeader;
-        Application.LoadLevelAsync("scene");        
+        Application.LoadLevelAsync("scene");
     }
-    
+
     public static void OnLeaderDeath()
     {
         OnGameOver();
     }
 
-    public static void OnBossDeath(Enemy e)
+    public static void OnBossDeath(MonsterGroup e)
     {
         instance.monsters.OnBossDeath(e);
     }
-    
+
     public static void OnGameOver()
     {
         GameObject.Destroy(instance.gameObject);

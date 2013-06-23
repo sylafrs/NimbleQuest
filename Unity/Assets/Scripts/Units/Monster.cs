@@ -7,7 +7,7 @@ using System.Collections.Generic;
   * @author Sylvain Lafon
   * @see MonoBehaviour
   */
-public class Enemy : Unit
+public class Monster : Unit
 {
 
 }

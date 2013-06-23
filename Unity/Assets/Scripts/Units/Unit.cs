@@ -135,6 +135,8 @@ public class Unit : MonoBehaviour {
 
     private void MoveForward()
     {
+        // if (this is Hero) return; // [DEBUG : Don't move our leader]
+
         Vector3 forward = OrientationUtility.ToVector3(this.orientation);
         this.transform.position += forward * Game.settings.speed * speed * Time.deltaTime;
     }

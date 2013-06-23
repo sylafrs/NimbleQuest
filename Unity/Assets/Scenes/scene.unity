@@ -215,7 +215,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 506715465}
-  - 114: {fileID: 506715466}
   m_Layer: 8
   m_Name: Level
   m_TagString: Untagged
@@ -236,16 +235,6 @@ Transform:
   - {fileID: 944154729}
   - {fileID: 771641465}
   m_Father: {fileID: 0}
---- !u!114 &506715466
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 506715464}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dae4f401c9ea0d84c9f1293ea7e58074, type: 3}
-  m_Name: 
 --- !u!1 &771641464
 GameObject:
   m_ObjectHideFlags: 0
@@ -379,7 +368,7 @@ Transform:
   m_GameObject: {fileID: 944154725}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 30, y: 1, z: 20}
+  m_LocalScale: {x: 29.5, y: 1, z: 19.5}
   m_Children: []
   m_Father: {fileID: 506715465}
 --- !u!1 &1091643522
@@ -409,6 +398,32 @@ Transform:
   m_Children:
   - {fileID: 405033274}
   m_Father: {fileID: 771641465}
+--- !u!1 &1274288524
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1274288525}
+  m_Layer: 0
+  m_Name: Monsters
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1274288525
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1274288524}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2065686822}
 --- !u!1 &1317723607
 GameObject:
   m_ObjectHideFlags: 0
@@ -487,7 +502,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1317723607}
   m_LocalRotation: {x: .707106829, y: 0, z: 0, w: .707106829}
-  m_LocalPosition: {x: 0, y: 100, z: 0}
+  m_LocalPosition: {x: 4.73174286, y: 308.126648, z: 4.00510406}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -718,6 +733,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 1274288525}
   - {fileID: 875468407}
   m_Father: {fileID: 0}
 --- !u!1 &2116598711

@@ -209,8 +209,8 @@ public class Group {
 
         if (fellow == this.leader)
         {
-            // GameOver
-            Game.OnLeaderDeath();
+            this.OnLeaderDeath();
+            return;
         }
         
         if(this.fellows.Contains(fellow))
@@ -219,6 +219,11 @@ public class Group {
         }
 
         throw new System.ArgumentException("Fellow in not in the group !");
+    }
+
+    public void OnLeaderDeath()
+    {
+
     }
 
     public void OnLeaderOrientationChangement()

@@ -8,5 +8,5 @@ using System.Collections.Generic;
   * @see MonoBehaviour
   */
 public class MonsterGroup : Group {
-    public MonsterGroup(Enemy leader) : base(leader) { }
+    public MonsterGroup(Monster leader) : base(leader) { }
 }

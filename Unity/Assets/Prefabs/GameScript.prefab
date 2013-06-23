@@ -44,7 +44,9 @@ MonoBehaviour:
     rotationSpeed: 10
     fellowSmoothSpeed: 50
     maxMonsterGroups: 5
-    minSpawnTime: 10
+    minSpawnTime: 5
+    checkSpawnTime: .150000006
+    spawnMargin: 5
     spawnChancesOverTime:
       serializedVersion: 2
       m_Curve:
@@ -53,10 +55,10 @@ MonoBehaviour:
         inSlope: 0
         outSlope: 0
         tangentMode: 0
-      - time: 4.99999952
-        value: 1.00000024
-        inSlope: .000596046448
-        outSlope: .000596046448
+      - time: 5
+        value: .999999523
+        inSlope: .56336987
+        outSlope: .56336987
         tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
