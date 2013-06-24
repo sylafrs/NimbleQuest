@@ -29,7 +29,7 @@ GameObject:
   - 54: {fileID: 5400000}
   - 114: {fileID: 11400000}
   m_Layer: 9
-  m_Name: Bat
+  m_Name: DarkMage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -121,16 +121,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39911645897de11459e05193a66543d6, type: 3}
   m_Name: 
   type: 1
-  force: 10000
+  force: 20
   range:
     field: 1
-    angle: 0
-    distance: 0
-  attackSpeed: 0
-  cooldown: 0
-  maxHealth: 30
+    angle: 270
+    distance: 1
+  attackSpeed: 7
+  cooldown: 2
+  maxHealth: 80
   orientation: 0
-  Speed: 5
+  Speed: 2
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -1,6 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+public enum AttackType
+{
+    KILL,
+    DAMAGES,
+    HEAL,
+    SLOW
+}
 
 /**
   * @class Unit
@@ -9,6 +16,8 @@ using System.Collections.Generic;
   * @see MonoBehaviour
   */
 public abstract class Unit : MonoBehaviour {
+
+    public AttackType type;
 
     public int force;
     public Range range;

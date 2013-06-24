@@ -120,6 +120,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2e5b748178e6da44aac521634e42da58, type: 3}
   m_Name: 
+  type: 1
   force: 50
   range:
     field: 1
