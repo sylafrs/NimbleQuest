@@ -12,7 +12,9 @@ public class MonsterManager : MonoBehaviour {
     private float               previousCheckTime;
     private float               previousSpawnTime;
     private Transform           mobsParent;
-    
+
+    private Monster[] fellowsPrefab;
+
     public void Awake()
     {
         Game.monsterGroups = new List<MonsterGroup>();
@@ -25,6 +27,15 @@ public class MonsterManager : MonoBehaviour {
         }
 
         mobsParent = mp.transform;
+
+        List<Monster> fellow = new List<Monster>();
+        foreach (Monster m in Game.settings.monsterPrefabs)
+        {
+            if (!m.BossOnly)
+                fellow.Add(m);
+        }
+
+        this.fellowsPrefab = fellow.ToArray();
     }
 
     public void Update()
@@ -82,19 +93,24 @@ public class MonsterManager : MonoBehaviour {
 
         if (Game.settings.monsterPrefabs.Length > 0)
         {
-            Monster boss = this.CreateMonster();
+            Monster boss = this.CreateMonster(null);
             boss.transform.position = pos;
 
             MonsterGroup group = new MonsterGroup(boss);
             Game.monsterGroups.Add(group);
 
+            bool isWithClonesIfRacist = (Random.Range(0, 5) == 0);           
+
             int maxMonsters = Mathf.Max(1, Game.settings.maxMonsterGroupCapacity);
 
-            int nMonsters = Random.Range(0, maxMonsters);
-            for (int i = 0; i < nMonsters; i++)
+            if (!boss.Racist || isWithClonesIfRacist)
             {
-                Monster monster = this.CreateMonster();
-                group.AddFellow(monster);
+                int nMonsters = Random.Range(0, maxMonsters);
+                for (int i = 0; i < nMonsters; i++)
+                {
+                    Monster monster = this.CreateMonster(boss);
+                    group.AddFellow(monster);
+                }
             }
 
             Debug.Log("[MOB SPAWN]\nPosition : " + pos + "\nBoss : " + boss.name + "\nMonsters : " + group.fellows.Count);  
@@ -105,11 +121,32 @@ public class MonsterManager : MonoBehaviour {
         }
     }
 
-    public Monster CreateMonster()
+    public Monster CreateMonster(Monster boss)
     {
-        Monster monsterPrefab = Game.settings.monsterPrefabs[
-            Random.Range(0, Game.settings.monsterPrefabs.Length)
-        ];
+        Monster monsterPrefab = null;
+        Monster[] prefabs = null;
+        if (boss)
+        {
+            if (boss.Racist)
+            {
+                monsterPrefab = boss;
+            }
+            else
+            {
+                prefabs = this.fellowsPrefab;
+            }
+        }
+        else
+        {
+            prefabs = Game.settings.monsterPrefabs;
+        }
+
+        if (monsterPrefab == null && prefabs != null)
+        {
+            monsterPrefab = prefabs[
+                Random.Range(0, prefabs.Length)
+            ];
+        }
 
         GameObject monster = GameObject.Instantiate(monsterPrefab.gameObject, Vector3.zero, Quaternion.identity) as GameObject;
         if (monster == null)

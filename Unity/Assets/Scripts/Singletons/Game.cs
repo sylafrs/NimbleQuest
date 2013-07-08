@@ -23,7 +23,8 @@ public class Game : MonoBehaviour
         public float checkSpawnTime = 0.1f;         //< Temps entre deux lancés de dé pour le spawn (0 = chaque frame)
         public int spawnMargin = 2;                 //< Marge au limites du sol, où les monstres ne spawneront pas
         public int maxMonsterGroupCapacity = 3;     //< Taille max. d'un groupe de monstres
-        public int securityMargin = 1;              //< Marge dans laquelle les monstres n'iront pas        
+        public int securityMargin = 1;              //< Marge dans laquelle les monstres n'iront pas    
+        public int securityDistance = 3;            //< Distance que les monstres tâcherons de respecter
         public bool dontMoveHero = false;           //< Don't move our hero
         public AnimationCurve spawnChancesOverTime; //< Courbe : Chances qu'un monstre spawn dans le temps, une fois le temps min. dépassé.
         public Hero[] heroesPrefabs;                //< Prefab des unités jouables

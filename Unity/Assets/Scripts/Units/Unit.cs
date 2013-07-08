@@ -159,7 +159,12 @@ public abstract class Unit : MonoBehaviour {
 
     protected float GetSpeed()
     {
-        return Game.settings.speed * speed * Time.deltaTime;
+        if (!IsInGroup || IsLeader)
+        {
+            return Game.settings.speed * speed * Time.deltaTime;
+        }
+
+        return this.group.leader.GetSpeed();
     }
 
     private void MoveForward()

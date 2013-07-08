@@ -27,6 +27,23 @@ public static class OrientationUtility
         return Orientation.NORTH;
     }
 
+    public static Orientation TurnRight(Orientation o)
+    {
+        switch (o)
+        {
+            case Orientation.NORTH:
+                return Orientation.EAST;
+            case Orientation.WEST:
+                return Orientation.NORTH;
+            case Orientation.SOUTH:
+                return Orientation.WEST;
+            case Orientation.EAST:
+                return Orientation.SOUTH;
+        }
+
+        return Orientation.NORTH;
+    }
+
     public static Vector3 ToVector3(Orientation o)
     {
         switch (o)
