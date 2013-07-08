@@ -299,7 +299,7 @@ MonoBehaviour:
     maxMonsterGroupCapacity: 3
     securityMargin: 5
     securityDistance: 10
-    dontMoveHero: 1
+    dontMoveHero: 0
     spawnChancesOverTime:
       serializedVersion: 2
       m_Curve:

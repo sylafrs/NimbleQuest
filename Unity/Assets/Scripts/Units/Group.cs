@@ -228,6 +228,11 @@ public class Group {
 
     public void OnLeaderOrientationChangement()
     {
+        if (leader.GetBaseSpeed() == 0)
+        {
+            return;
+        }
+
         FellowPath.CheckPoint checkpoint = new FellowPath.CheckPoint();
         checkpoint.position = this.leader.transform.position;
         checkpoint.orientation = this.leader.orientation;
@@ -278,4 +283,32 @@ public class Group {
             GUILayout.EndHorizontal();
         }
     }    
+
+    public float GetSpeed()
+    {
+        float min = leader.GetBaseSpeed();
+        foreach (Unit f in fellows)
+        {
+            min = Mathf.Min(min, f.GetBaseSpeed());
+        }
+
+        return min;
+    }
+
+    public Unit GetSlowestUnit()
+    {
+        Unit slowestUnit = leader;
+        float min = leader.GetBaseSpeed();
+        foreach (Unit f in fellows)
+        {
+            float s = f.GetBaseSpeed();
+            if (s < min)
+            {
+                slowestUnit = f;
+                min = s;
+            }
+        }
+
+        return slowestUnit;
+    }
 }

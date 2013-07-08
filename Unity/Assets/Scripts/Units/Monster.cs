@@ -14,16 +14,17 @@ public class Monster : Unit
 
     public bool Racist = false;
     public bool BossOnly = false;
+    public bool Weak = false;
     public float FixedOrientationChangement = -1;
 
     protected override void Start()
     {
-        GameObject securityTrigger = new GameObject("SecurityTrigger");
-        SphereCollider sc = securityTrigger.AddComponent<SphereCollider>();
-        sc.radius = Game.settings.securityDistance;
-        sc.isTrigger = true;
-        sc.transform.parent = this.transform;
-        sc.transform.localPosition = Vector3.zero;
+        //GameObject securityTrigger = new GameObject("SecurityTrigger");
+        //SphereCollider sc = securityTrigger.AddComponent<SphereCollider>();
+        //sc.radius = Game.settings.securityDistance;
+        //sc.isTrigger = true;
+        //sc.transform.parent = this.transform;
+        //sc.transform.localPosition = Vector3.zero;
 
         this.speed = this.Speed;
         base.Start();
@@ -98,6 +99,20 @@ public class Monster : Unit
 
     private bool CheckMonster(Orientation orientation)
     {
+        Vector3 forward = OrientationUtility.ToVector3(orientation);
+        Vector3 position = this.transform.position + forward * this.GetSpeed();
+
+        
+
+
+
+
         return false;
+    }
+
+    public void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(this.transform.position, Game.settings.securityDistance);
     }
 }

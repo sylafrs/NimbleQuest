@@ -26,6 +26,7 @@ public abstract class Unit : MonoBehaviour {
     public int maxHealth;
 
     protected float speed;
+    
     private float remainingCooldown;
 
     private int health;
@@ -118,6 +119,12 @@ public abstract class Unit : MonoBehaviour {
 
     private void UpdateOrientation()
     {
+        if (GetBaseSpeed() == 0)
+        {
+            this.orientation = this.group.leader.orientation;
+            return;
+        }
+
         Group.FellowPath path = this.group.fellowPaths[this];
 
         if (path.checkpoints.Count > 0)
@@ -157,14 +164,17 @@ public abstract class Unit : MonoBehaviour {
         this.transform.forward = Vector3.Slerp(this.transform.forward, OrientationUtility.ToVector3(this.orientation), Time.deltaTime * Game.settings.rotationSpeed);
     }
 
+    public float GetBaseSpeed()
+    {
+        return speed;
+    }
+
     protected float GetSpeed()
     {
-        if (!IsInGroup || IsLeader)
-        {
-            return Game.settings.speed * speed * Time.deltaTime;
-        }
+        if(IsInGroup)
+            return Game.settings.speed * this.group.GetSpeed() * Time.deltaTime;
 
-        return this.group.leader.GetSpeed();
+        return Game.settings.speed * this.speed * Time.deltaTime;  
     }
 
     private void MoveForward()

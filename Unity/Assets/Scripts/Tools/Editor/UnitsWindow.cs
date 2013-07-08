@@ -46,6 +46,25 @@ public class UnitsWindow : EditorWindow
         {
             EditorGUILayout.LabelField("====== MONSTER GROUP ======");
 
+            Unit slowest = mg.GetSlowestUnit();
+            string slowestUnitName = slowest.name;
+            float speed = slowest.GetBaseSpeed();
+           
+            string str = "";
+            for (int i = 0; i < 5; i++)
+            {
+                if (speed > i)
+                {
+                    str += "||";
+                }
+                else
+                {
+                    str += "..";
+                }
+            }
+            
+            EditorGUILayout.LabelField("Speed (" + slowestUnitName + ")", str);
+
             DebugUnit(mg.leader);
             foreach (var u in mg.fellows)
             {
@@ -65,6 +84,7 @@ public class UnitsWindow : EditorWindow
 
         if (toogleUnit[u] = EditorGUILayout.InspectorTitlebar(toogleUnit[u], u))
         {
+            EditorGUILayout.ObjectField("Name", u, typeof(Unit), true);
             if (u.IsLeader)
             {
                 if (u is Monster)

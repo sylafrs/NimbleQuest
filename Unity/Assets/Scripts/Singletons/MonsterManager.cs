@@ -105,7 +105,13 @@ public class MonsterManager : MonoBehaviour {
 
             if (!boss.Racist || isWithClonesIfRacist)
             {
-                int nMonsters = Random.Range(0, maxMonsters);
+                int minMonsters = 0;
+                if (boss.Weak)
+                {
+                    minMonsters = 1;
+                }
+
+                int nMonsters = Random.Range(minMonsters, maxMonsters);
                 for (int i = 0; i < nMonsters; i++)
                 {
                     Monster monster = this.CreateMonster(boss);

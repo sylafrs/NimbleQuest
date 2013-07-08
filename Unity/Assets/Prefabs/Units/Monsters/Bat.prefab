@@ -131,8 +131,9 @@ MonoBehaviour:
   maxHealth: 30
   orientation: 0
   Speed: 5
-  Racist: 0
-  BossOnly: 1
+  Racist: 1
+  BossOnly: 0
+  Weak: 0
   FixedOrientationChangement: -1
 --- !u!1001 &100100000
 Prefab:

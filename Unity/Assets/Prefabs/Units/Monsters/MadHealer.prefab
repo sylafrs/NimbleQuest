@@ -131,6 +131,10 @@ MonoBehaviour:
   maxHealth: 130
   orientation: 0
   Speed: 1
+  Racist: 0
+  BossOnly: 0
+  Weak: 1
+  FixedOrientationChangement: -1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
