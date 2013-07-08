@@ -10,7 +10,10 @@ using System.Collections.Generic;
 public class Hero : Unit {
     protected override void Start()
     {
-        this.speed = Game.settings.heroSpeed;
-        base.Start();
+        if (Game.started)
+        {
+            this.speed = Game.settings.heroSpeed;
+            base.Start();
+        }
     }
 }

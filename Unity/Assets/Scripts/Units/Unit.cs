@@ -91,6 +91,9 @@ public abstract class Unit : MonoBehaviour {
 
     protected virtual void Update()
     {
+        if (!Game.started)
+            return;
+
         if (this.remainingCooldown > 0)
         {
             this.remainingCooldown -= Time.deltaTime;
@@ -212,17 +215,19 @@ public abstract class Unit : MonoBehaviour {
         }
     }
 
-    public void OnDrawGizmos()
+    public virtual void OnDrawGizmos()
     {
-        const int up = 5;
-        const int len = 10;
+        // const int up = 5;
+        // const int len = 10;
+        // 
+        // Gizmos.color = Color.red;
+        // 
+        // Gizmos.DrawLine(
+        //     this.transform.position + (Vector3.up * up), 
+        //     this.transform.position + (this.transform.forward * len) + (Vector3.up * up)
+        // );
 
-        Gizmos.color = Color.red;
-
-        Gizmos.DrawLine(
-            this.transform.position + (Vector3.up * up), 
-            this.transform.position + (this.transform.forward * len) + (Vector3.up * up)
-        );
+        this.range.OnDrawGizmos(this);
     }
 
     protected virtual void OnTriggerExit(Collider trigger) {

@@ -110,9 +110,14 @@ public class Monster : Unit
         return false;
     }
 
-    public void OnDrawGizmos()
+    public override void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(this.transform.position, Game.settings.securityDistance);
+        base.OnDrawGizmos();
+
+        if (Game.settings != null)
+        {
+            Gizmos.color = Color.red;        
+            Gizmos.DrawWireSphere(this.transform.position, Game.settings.securityDistance);
+        }
     }
 }
