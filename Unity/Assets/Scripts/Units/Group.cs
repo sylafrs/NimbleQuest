@@ -135,6 +135,25 @@ public class Group {
         return false;
     }
 
+    public Unit Contains(string name)
+    {
+        if (name == null)
+            throw new System.ArgumentNullException("I need a name !");
+
+        if (this.leader.name.Equals(name))
+            return this.leader;
+        
+        foreach (Unit u in fellows)
+        {
+            if (u.name.Equals(name))
+            {
+                return u;
+            }
+        }
+
+        return null;
+    }
+
     public Group AddFellow(Unit fellow)
     {
         if (fellow == null)
@@ -166,6 +185,29 @@ public class Group {
         
         return this;
     }
+
+    public Rect GetRect(float margin = 0)
+    {
+        float minX, maxX, minZ, maxZ;
+
+        minX = maxX = this.leader.transform.position.x;
+        minZ = maxZ = this.leader.transform.position.z;
+
+        foreach (var f in fellows)
+        {
+            minX = Mathf.Min(minX, f.transform.position.x);
+            minZ = Mathf.Min(minZ, f.transform.position.z);
+            maxX = Mathf.Max(maxX, f.transform.position.x);
+            maxZ = Mathf.Max(maxZ, f.transform.position.z);
+        }
+
+        minX -= margin;
+        maxX += margin;
+        minZ -= margin;
+        maxZ += margin;
+
+        return RectUtility.MinMaxRect(new Vector3(minX, 0, minZ), new Vector3(maxX, 0, maxZ));
+    }    
 
     public int GetUnitPosition(Unit fellow)
     {

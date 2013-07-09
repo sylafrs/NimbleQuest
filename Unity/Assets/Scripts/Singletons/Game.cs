@@ -35,9 +35,11 @@ public class Game : MonoBehaviour
         public bool dontMoveHero = false;           //< Empêche le héros de bouger
         public float distanceRatio = 1;             //< Ratio pour la range
         public float minMonsterRotationTime = 0.2f; //< Temps minimal que doit attendre un monstre pour changer d'orientation (Prioritaire aux collisions)
+        public float timeShowingLife = 5;           //< Temps durant lequel on montre la vie (opaque)
         public AnimationCurve spawnChancesOverTime; //< Courbe : Chances qu'un monstre spawn dans le temps, une fois le temps min. dépassé.
         public Hero[] heroesPrefabs;                //< Prefab des unités jouables
         public Monster[] monsterPrefabs;            //< Prefab des unités ennemies
+        public GameObject lifeBarPrefab;
 
         public GIZMOSTYPE GizmosType;
     }

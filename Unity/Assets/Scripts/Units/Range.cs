@@ -27,13 +27,11 @@ public class Range {
         if (Game.started)
         {
             Color oldC = Gizmos.color;
-
+            
+            Gizmos.color = Color.blue;
             switch (field)
             {
                 case FIELD.CIRCLE:
-
-                    Gizmos.color = Color.blue;
-
                     float a2 = angle * Mathf.Deg2Rad / 2.0f;                    
                     float d = distance * Game.settings.distanceRatio * Mathf.Tan(a2);
 
@@ -114,9 +112,14 @@ public class Range {
 
                     break;
                 case FIELD.FORWARD:
+                    Gizmos.DrawLine(u.transform.position, u.transform.position + (u.transform.forward * distance * Game.settings.distanceRatio));
                     break;
+
                 case FIELD.GROUP:
+                    Rect groupRect = u.group.GetRect(5);
+                    RectUtility.GizmosRect(groupRect);
                     break;
+
                 default: // FIELD.NONE
                     break;
             }

@@ -130,7 +130,7 @@ public class MonsterManager : MonoBehaviour {
     public Monster CreateMonster(Monster boss)
     {
         Monster monsterPrefab = null;
-        Monster[] prefabs = null;
+        List<Monster> prefabs = null;
         if (boss)
         {
             if (boss.Racist)
@@ -139,18 +139,30 @@ public class MonsterManager : MonoBehaviour {
             }
             else
             {
-                prefabs = this.fellowsPrefab;
+                prefabs = new List<Monster>(this.fellowsPrefab);
+                if (boss.Unique && !boss.BossOnly)
+                {
+                    prefabs.Remove(boss);
+                }
+
+                foreach (Monster m in fellowsPrefab)
+                {
+                    if (prefabs.Contains(m) && m.Unique && boss.group.Contains(m.name))
+                    {
+                        prefabs.Remove(m);
+                    }
+                }                
             }
         }
         else
         {
-            prefabs = Game.settings.monsterPrefabs;
+            prefabs = new List<Monster>(Game.settings.monsterPrefabs);
         }
 
         if (monsterPrefab == null && prefabs != null)
         {
             monsterPrefab = prefabs[
-                Random.Range(0, prefabs.Length)
+                Random.Range(0, prefabs.Count)
             ];
         }
 

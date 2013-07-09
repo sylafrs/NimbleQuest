@@ -51,7 +51,7 @@ MonoBehaviour:
     securityMargin: 10
     securityDistance: 22
     dontMoveHero: 1
-    distanceRatio: 8
+    distanceRatio: 10
     minMonsterRotationTime: .200000003
     spawnChancesOverTime:
       serializedVersion: 2
@@ -82,6 +82,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 588acaf571c71884694a4982f22ddbfa, type: 2}
     - {fileID: 11400000, guid: 0a8a47a3c31ca884aaa5036da701b648, type: 2}
     - {fileID: 11400000, guid: 4240bae44d4a96649b4e1bc7e5bb5f3c, type: 2}
+    lifeBarPrefab: {fileID: 100002, guid: 6b23480c6d6124d4c8ffa3993c534112, type: 2}
     GizmosType: 2
 --- !u!1001 &100100000
 Prefab:

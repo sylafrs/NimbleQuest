@@ -187,8 +187,9 @@ MonoBehaviour:
   orientation: 0
   Speed: 5
   Racist: 1
-  BossOnly: 0
+  BossOnly: 1
   Weak: 0
+  Unique: 0
   FixedOrientationChangement: -1
 --- !u!114 &11400002
 MonoBehaviour:

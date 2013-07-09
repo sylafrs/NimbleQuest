@@ -49,6 +49,10 @@ public abstract class Unit : MonoBehaviour {
     [HideInInspector]
     public Orientation orientation;    
     public Group group;
+
+    private FollowAtOrtho lifebar;
+    private Transform innerLifebar;
+    private float timeRemainingShowingLife;
     
     public bool IsInGroup
     {
@@ -74,6 +78,33 @@ public abstract class Unit : MonoBehaviour {
     protected virtual void Start()
     {
         this.health = this.maxHealth;
+        this.AttachLifeBar();        
+    }
+
+    private void AttachLifeBar()
+    {
+        GameObject parent = GameObject.Find("GUI/Lifebars");
+        Camera guiCam = GameObject.FindGameObjectWithTag("GUICamera").camera;
+        
+        GameObject lifeBarGO = GameObject.Instantiate(Game.settings.lifeBarPrefab) as GameObject;
+        if (lifeBarGO == null)
+        {
+            throw new UnityException("Can't find the life bar prefab");
+        }
+
+        lifebar = lifeBarGO.GetComponent<FollowAtOrtho>();
+        if (lifebar == null)
+        {
+            throw new UnityException("Can't find FollowAtOrtho component");
+        }
+
+        lifebar.transform.parent = parent.transform;
+        lifebar.target = this.transform;
+        lifebar.cam = guiCam;
+
+        innerLifebar = lifeBarGO.transform.FindChild("Inner");
+
+        // this.SetLifebar(); // No need for this
     }
 
     public virtual bool Attack(Unit target)
@@ -112,6 +143,60 @@ public abstract class Unit : MonoBehaviour {
                 UpdatePosition();
                 UpdateOrientation();                
             }
+        }
+
+        this.UpdateLifebar();
+    }
+
+    public void SetLifebar()
+    {
+        float p = this.HealthPercent;
+
+        Vector3 life = innerLifebar.transform.localScale;
+        life.x = p;
+        innerLifebar.transform.localScale = life;
+
+        Renderer lb = innerLifebar.transform.FindChild("Model").renderer;
+        lb.material.color = Color.Lerp(Color.red, Color.green, p);
+
+        timeRemainingShowingLife = Game.settings.timeShowingLife;
+    }
+
+    public void UpdateLifebar()
+    {
+        const float FADE_FINISHED = -10;
+
+        if (timeRemainingShowingLife > 0)
+        {
+            timeRemainingShowingLife -= Time.deltaTime;
+        }
+        else if (timeRemainingShowingLife != FADE_FINISHED)
+        {
+            Renderer lb;
+            Color c;
+            float alpha;
+            
+            // Fade the innerbar
+            lb = innerLifebar.transform.FindChild("Model").renderer;
+            c = lb.material.color;
+            alpha = c.a;
+
+                // Reduce the alpha channel
+                alpha = Mathf.Lerp(alpha, 0, Time.deltaTime);
+                if (alpha < 0.1f)
+                {
+                    alpha = 0;
+                    timeRemainingShowingLife = FADE_FINISHED;
+                }
+
+            c.a = alpha;
+            lb.material.color = c;
+
+            // Apply the same alpha value to the background
+            lb = lifebar.transform.FindChild("Model").renderer;
+            c = lb.material.color;
+            c.a = alpha; // use the same computed value
+            lb.material.color = c;
         }
     }
 
@@ -233,6 +318,7 @@ public abstract class Unit : MonoBehaviour {
     }
 
     protected virtual void BeforeMoveForward() { /* Nothing by default */ }
+    
 
     //public void OnGUI()
     //{

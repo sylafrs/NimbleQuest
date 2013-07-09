@@ -16,6 +16,7 @@ public class Monster : Unit
     public bool Racist = false;
     public bool BossOnly = false;
     public bool Weak = false;
+    public bool Unique = false;
     public float FixedOrientationChangement = -1;
 
     protected override void Start()
