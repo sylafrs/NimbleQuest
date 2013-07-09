@@ -178,7 +178,7 @@ MonoBehaviour:
   type: 1
   force: 10000
   range:
-    field: 1
+    field: 0
     angle: 0
     distance: 0
   attackSpeed: 0

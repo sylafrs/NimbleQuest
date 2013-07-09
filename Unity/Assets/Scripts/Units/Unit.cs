@@ -307,7 +307,7 @@ public abstract class Unit : MonoBehaviour {
     {
         if (Game.started && Game.settings.GizmosType == GIZMOSTYPE.RANGE)
         {
-            this.range.OnDrawGizmos(this);
+            Range.OnDrawGizmos(this);
         }
     }
 

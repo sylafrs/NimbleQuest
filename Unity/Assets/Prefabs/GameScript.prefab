@@ -50,9 +50,10 @@ MonoBehaviour:
     maxMonsterGroupCapacity: 3
     securityMargin: 10
     securityDistance: 22
-    dontMoveHero: 1
+    dontMoveHero: 0
     distanceRatio: 10
     minMonsterRotationTime: .200000003
+    timeShowingLife: 5
     spawnChancesOverTime:
       serializedVersion: 2
       m_Curve:
