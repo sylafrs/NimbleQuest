@@ -46,11 +46,13 @@ MonoBehaviour:
     maxMonsterGroups: 5
     minSpawnTime: 5
     checkSpawnTime: .150000006
-    spawnMargin: 10
+    spawnMargin: 15
     maxMonsterGroupCapacity: 3
-    securityMargin: 5
-    securityDistance: 10
-    dontMoveHero: 0
+    securityMargin: 10
+    securityDistance: 22
+    dontMoveHero: 1
+    distanceRatio: 8
+    minMonsterRotationTime: .200000003
     spawnChancesOverTime:
       serializedVersion: 2
       m_Curve:
@@ -80,6 +82,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 588acaf571c71884694a4982f22ddbfa, type: 2}
     - {fileID: 11400000, guid: 0a8a47a3c31ca884aaa5036da701b648, type: 2}
     - {fileID: 11400000, guid: 4240bae44d4a96649b4e1bc7e5bb5f3c, type: 2}
+    GizmosType: 2
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

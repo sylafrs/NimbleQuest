@@ -288,39 +288,42 @@ public class Monster : Unit
 
         if (Game.settings != null)
         {
-            if (this.IsLeader && this.speed != 0)
+            if (Game.settings.GizmosType == GIZMOSTYPE.MOVE)
             {
-                Gizmos.color = Color.green;
-
-                var orientations = this.possibleOrientations();
-                if (orientations.Count == 0)
-                {
-                    orientations.Add(this.orientation);
-                }
-                foreach (var o in orientations)
-                {
-                    Vector3 dir = OrientationUtility.ToVector3(o) * 50;
-                    Gizmos.DrawLine(this.transform.position, this.transform.position + dir);
-                }
-            }
-
-            //List<Unit> danger = this.InDangerFieldUnits();
-            Vector3 ave = this.GetDangerEscapeDirection();
-
-            if (ave == Vector3.zero)
-            {
-                Gizmos.color = Color.yellow;
-            }
-            else
-            {
-                Gizmos.color = Color.red;
                 if (this.IsLeader && this.speed != 0)
                 {
-                    Gizmos.DrawLine(this.transform.position, this.transform.position + (ave * 4));       
-                }
-            }
+                    Gizmos.color = Color.green;
 
-            Gizmos.DrawWireSphere(this.transform.position, Game.settings.securityDistance);
+                    var orientations = this.possibleOrientations();
+                    if (orientations.Count == 0)
+                    {
+                        orientations.Add(this.orientation);
+                    }
+                    foreach (var o in orientations)
+                    {
+                        Vector3 dir = OrientationUtility.ToVector3(o) * 50;
+                        Gizmos.DrawLine(this.transform.position, this.transform.position + dir);
+                    }
+                }
+
+                //List<Unit> danger = this.InDangerFieldUnits();
+                Vector3 ave = this.GetDangerEscapeDirection();
+
+                if (ave == Vector3.zero)
+                {
+                    Gizmos.color = Color.yellow;
+                }
+                else
+                {
+                    Gizmos.color = Color.red;
+                    if (this.IsLeader && this.speed != 0)
+                    {
+                        Gizmos.DrawLine(this.transform.position, this.transform.position + (ave * 4));
+                    }
+                }
+
+                Gizmos.DrawWireSphere(this.transform.position, Game.settings.securityDistance);
+            }
         }
     }
 

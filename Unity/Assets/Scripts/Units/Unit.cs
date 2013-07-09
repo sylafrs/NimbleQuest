@@ -220,17 +220,10 @@ public abstract class Unit : MonoBehaviour {
 
     public virtual void OnDrawGizmos()
     {
-        // const int up = 5;
-        // const int len = 10;
-        // 
-        // Gizmos.color = Color.red;
-        // 
-        // Gizmos.DrawLine(
-        //     this.transform.position + (Vector3.up * up), 
-        //     this.transform.position + (this.transform.forward * len) + (Vector3.up * up)
-        // );
-
-        this.range.OnDrawGizmos(this);
+        if (Game.started && Game.settings.GizmosType == GIZMOSTYPE.RANGE)
+        {
+            this.range.OnDrawGizmos(this);
+        }
     }
 
     protected virtual void OnTriggerExit(Collider trigger) {
@@ -239,10 +232,7 @@ public abstract class Unit : MonoBehaviour {
         }
     }
 
-    protected virtual void BeforeMoveForward()
-    {
-
-    }
+    protected virtual void BeforeMoveForward() { /* Nothing by default */ }
 
     //public void OnGUI()
     //{

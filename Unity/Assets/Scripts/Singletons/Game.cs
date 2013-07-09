@@ -1,6 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+public enum GIZMOSTYPE
+{
+    NONE,
+    MOVE,
+    RANGE
+}
+
 /**
   * @class Game
   * @brief Description.
@@ -31,6 +38,8 @@ public class Game : MonoBehaviour
         public AnimationCurve spawnChancesOverTime; //< Courbe : Chances qu'un monstre spawn dans le temps, une fois le temps min. dépassé.
         public Hero[] heroesPrefabs;                //< Prefab des unités jouables
         public Monster[] monsterPrefabs;            //< Prefab des unités ennemies
+
+        public GIZMOSTYPE GizmosType;
     }
 
     public Settings setSettings;
