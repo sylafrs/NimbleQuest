@@ -268,14 +268,21 @@ public class Group {
         if(this.fellows.Contains(fellow))
         {
             // Remove it from group
+            this.fellowPaths.Remove(fellow);
+            this.fellows.Remove(fellow);
+
+            fellow.DestroyObject();
+            return;
         }
 
         throw new System.ArgumentException("Fellow in not in the group !");
     }
 
-    public void OnLeaderDeath()
-    {
-
+    public virtual void OnLeaderDeath() {
+        foreach (var f in this.fellows)
+        {
+            f.OnLeaderDeath();
+        }
     }
 
     public void OnLeaderOrientationChangement()

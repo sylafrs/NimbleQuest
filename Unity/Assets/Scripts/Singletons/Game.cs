@@ -16,7 +16,15 @@ public enum GIZMOSTYPE
   */
 public class Game : MonoBehaviour
 {
-
+    public enum State
+    {
+        NONE,
+        PLAYING,
+        PAUSED,
+        GAMEOVER,
+        EXITING
+    }
+    
     [System.Serializable]
     public class Settings
     {
@@ -44,6 +52,8 @@ public class Game : MonoBehaviour
         public GIZMOSTYPE GizmosType;
     }
 
+    // --------------------------------------  //
+
     public Settings setSettings;
     private MonsterManager monsters;
 
@@ -53,6 +63,7 @@ public class Game : MonoBehaviour
         settings = this.setSettings;
         started = true;
         instance = this;
+        state = State.NONE;
     }
 
     private void OnLevelWasLoaded(int level)
@@ -71,6 +82,7 @@ public class Game : MonoBehaviour
         instance.gameObject.AddComponent<InputManager>();
 
         Camera.main.GetComponent<FollowOffset>().target = hg.leader.transform;
+        state = State.PLAYING;        
     }
 
     private void CreateHeroicGroup()
@@ -93,6 +105,59 @@ public class Game : MonoBehaviour
         hg = new HeroicGroup(leader.GetComponent<Hero>());
     }
 
+    private void OnGUI()
+    {
+        if (state == State.PLAYING)
+        {
+            // Something.. later :)
+        }
+        if (state == State.PAUSED)
+        {
+            if (GUILayout.Button("Resume"))
+            {
+                OnResume();
+            }
+
+            if (GUILayout.Button("Restart"))
+            {
+                OnRestart();
+            }
+
+            if (Camera.main.audio.mute)
+            {
+                if (GUILayout.Button("Play music"))
+                {
+                    Camera.main.audio.mute = false;
+                }
+            }
+            else
+            {
+                if (GUILayout.Button("Mute music"))
+                {
+                    Camera.main.audio.mute = true;
+                }
+            }
+            
+            if (GUILayout.Button("Exit"))
+            {
+                OnExit();
+            }
+        }
+        if (state == State.GAMEOVER)
+        {
+            GUILayout.Label("GameOver");
+            if (GUILayout.Button("Exit"))
+            {
+                OnExit();
+            }
+
+            if (GUILayout.Button("Retry"))
+            {
+                OnRestart();
+            }
+        }
+    }
+
     // ---------------------------------------  //
 
     public static Game instance { get; private set; }
@@ -101,6 +166,8 @@ public class Game : MonoBehaviour
     public static Settings settings;
     public static HeroicGroup hg;
     public static List<MonsterGroup> monsterGroups;
+
+    public static State state { get; private set; }
 
     private static Hero selectedLeader;
 
@@ -141,6 +208,11 @@ public class Game : MonoBehaviour
         Application.LoadLevelAsync("scene");
     }
 
+    public static void OnRestart()
+    {
+        LaunchGame(selectedLeader);
+    }
+
     public static void OnLeaderDeath()
     {
         OnGameOver();
@@ -151,10 +223,36 @@ public class Game : MonoBehaviour
         instance.monsters.OnBossDeath(e);
     }
 
+    public static void OnPauseButton()
+    {
+        if (state == State.PAUSED)
+            OnResume();
+        else if (state == State.PLAYING)
+            OnPause();
+    }
+
+    public static void OnPause()
+    {
+        state = State.PAUSED;
+    }
+
+    public static void OnResume()
+    {
+        state = State.PLAYING;
+    }
+
     public static void OnGameOver()
     {
-        GameObject.Destroy(instance.gameObject);
-        Application.LoadLevel(0);
+        state = State.GAMEOVER;
+    }
+
+    public static void OnExit() {
+        if (state != State.EXITING)
+        {
+            state = State.EXITING;
+            GameObject.Destroy(instance.gameObject);
+            Application.LoadLevel(0);
+        }
     }
 
     public static void OnDirectionKey(Orientation o)

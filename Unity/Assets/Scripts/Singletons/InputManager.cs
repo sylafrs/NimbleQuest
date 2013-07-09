@@ -9,6 +9,8 @@ using System.Collections.Generic;
   */
 public class InputManager : MonoBehaviour {
 
+    public bool pauseState = false;
+
     void Update()
     {
         const float epsilon = 0.05f;
@@ -32,9 +34,27 @@ public class InputManager : MonoBehaviour {
         {
             Game.OnDirectionKey(Orientation.NORTH);
         }
+        //else
+        //{
+        //    //Debug.Log("NO MOVE");
+        //}
+
+        if (Input.GetAxis("Exit") > epsilon)
+        {
+            Game.OnExit();
+        }
+
+        if (Input.GetAxis("Pause") > epsilon)
+        {
+            if (pauseState == false)
+            {
+                pauseState = true;
+                Game.OnPauseButton();
+            }
+        }
         else
         {
-            //Debug.Log("NO MOVE");
+            pauseState = false;
         }
     }
 

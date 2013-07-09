@@ -9,4 +9,9 @@ using System.Collections.Generic;
   */
 public class HeroicGroup : Group {
     public HeroicGroup(Hero leader) : base(leader) { }
+
+    public override void OnLeaderDeath()
+    {
+        Game.OnLeaderDeath();
+    }
 }

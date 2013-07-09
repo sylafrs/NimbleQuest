@@ -9,4 +9,9 @@ using System.Collections.Generic;
   */
 public class MonsterGroup : Group {
     public MonsterGroup(Monster leader) : base(leader) { }
+
+    public override void OnLeaderDeath()
+    {
+        Game.OnBossDeath(this);
+    }
 }

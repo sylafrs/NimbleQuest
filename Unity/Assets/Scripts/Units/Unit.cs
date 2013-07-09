@@ -15,7 +15,7 @@ public enum AttackType
   * @author Sylvain Lafon
   * @see MonoBehaviour
   */
-public abstract class Unit : MonoBehaviour {
+public abstract class Unit : MyMonoBehaviour {
 
     public AttackType type;
 
@@ -123,6 +123,7 @@ public abstract class Unit : MonoBehaviour {
                 {
                     target.health -= this.force;
                     target.SetLifebar();
+                    Mathf.Clamp(target.health, 0, target.maxHealth);
                 });
 
                 projectile.Release(target.transform);
@@ -134,12 +135,19 @@ public abstract class Unit : MonoBehaviour {
         Debug.Log("I need a projectile");
         target.health -= this.force; 
         target.SetLifebar();
+        Mathf.Clamp(target.health, 0, target.maxHealth);
     }
 
     protected virtual void Update()
-    {
-        if (!Game.started)
+    {  
+        if (Game.state != Game.State.PLAYING)
             return;
+
+        if (this.health == 0)
+        {
+            this.OnDying();
+            return;
+        }
 
         if (this.remainingCooldown > 0)
         {
@@ -229,17 +237,25 @@ public abstract class Unit : MonoBehaviour {
     }
 
     public void SetLifebar()
-    {
-        float p = this.HealthPercent;
+    {        
+        if (lifebar)
+        {
+            float p = this.HealthPercent;
 
-        Vector3 life = innerLifebar.transform.localScale;
-        life.x = p;
-        innerLifebar.transform.localScale = life;
+            Vector3 life = innerLifebar.transform.localScale;
+            life.x = p;
+            innerLifebar.transform.localScale = life;
 
-        Renderer lb = innerLifebar.transform.FindChild("Model").renderer;
-        lb.material.color = Color.Lerp(Color.red, Color.green, p);
+            Renderer lb = innerLifebar.transform.FindChild("Model").renderer;
+            lb.material.color = Color.Lerp(Color.red, Color.green, p);
 
-        timeRemainingShowingLife = Game.settings.timeShowingLife;
+            lb = lifebar.transform.FindChild("Model").renderer;
+            Color c = lb.material.color;
+            c.a = 1; // use the same computed value
+            lb.material.color = c;
+
+            timeRemainingShowingLife = Game.settings.timeShowingLife;
+        }
     }
 
     public void UpdateLifebar()
@@ -278,6 +294,11 @@ public abstract class Unit : MonoBehaviour {
             c.a = alpha; // use the same computed value
             lb.material.color = c;
         }
+    }
+
+    public void OnLeaderDeath()
+    {
+        this.OnDying();
     }
 
     protected virtual void OnDying()
@@ -404,6 +425,14 @@ public abstract class Unit : MonoBehaviour {
     }
    
     protected virtual void BeforeMoveForward() { /* Nothing by default */ }
+
+    public override void DestroyObject()
+    {
+        if(this.lifebar)
+            GameObject.Destroy(this.lifebar);
+
+        base.DestroyObject();
+    }
 
     //public void OnGUI()
     //{

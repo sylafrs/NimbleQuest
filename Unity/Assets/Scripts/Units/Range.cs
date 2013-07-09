@@ -189,8 +189,9 @@ public class Range {
         }
 
         // Second step : forward (with epsilon)
+        Vector3 forward = OrientationUtility.ToVector3(u.orientation); //u.transform.forward;
         Vector3 trans = target.transform.position - u.transform.position;
-        Vector3 project = Vector3.Project(trans, u.transform.forward);
+        Vector3 project = Vector3.Project(trans, forward);
         Vector3 ortho = trans - project;
 
         return (ortho.sqrMagnitude < epsilon);

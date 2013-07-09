@@ -40,6 +40,12 @@ public class MonsterManager : MonoBehaviour {
 
     public void Update()
     {
+        if (!Game.started)
+            return;
+
+        if (Game.state != Game.State.PLAYING)
+            return;
+
         this.UpdateSpawn();
     }
 
