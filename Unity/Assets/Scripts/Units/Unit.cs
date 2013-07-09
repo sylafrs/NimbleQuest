@@ -163,6 +163,8 @@ public abstract class Unit : MonoBehaviour {
 
         this.UpdateWeapon();
         this.UpdateLifebar();
+
+        this.CheckWall();
     }
 
     public void UpdateWeapon()
@@ -389,12 +391,18 @@ public abstract class Unit : MonoBehaviour {
         }
     }
 
-    protected virtual void OnTriggerExit(Collider trigger) {
-        if(trigger.name.Equals("Walls")) {
+    public void CheckWall()
+    {
+        Vector3 min, max;
+        Game.GetMinMaxLevel(out min, out max);
+        Rect zone = RectUtility.MinMaxRect(min, max);               
+
+        if (!RectUtility.ContainsXZ(zone, this.transform.position))
+        {
             Game.OnUnitHitsWall(this);
         }
     }
-
+   
     protected virtual void BeforeMoveForward() { /* Nothing by default */ }
 
     //public void OnGUI()

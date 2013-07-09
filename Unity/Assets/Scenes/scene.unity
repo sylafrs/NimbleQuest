@@ -317,7 +317,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 771641465}
-  - 65: {fileID: 771641466}
   m_Layer: 8
   m_Name: Walls
   m_TagString: Untagged
@@ -340,18 +339,6 @@ Transform:
   - {fileID: 337870656}
   - {fileID: 1486189523}
   m_Father: {fileID: 506715465}
---- !u!65 &771641466
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 771641464}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 300, y: 50, z: 200}
-  m_Center: {x: 0, y: 20, z: 0}
 --- !u!1 &875468406
 GameObject:
   m_ObjectHideFlags: 0
@@ -387,7 +374,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 944154729}
   - 33: {fileID: 944154728}
-  - 64: {fileID: 944154727}
   - 23: {fileID: 944154726}
   m_Layer: 8
   m_Name: Floor
@@ -414,19 +400,6 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
---- !u!64 &944154727
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 944154725}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_SmoothSphereCollisions: 0
-  m_Convex: 0
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!33 &944154728
 MeshFilter:
   m_ObjectHideFlags: 0
