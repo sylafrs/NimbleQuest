@@ -137,12 +137,10 @@ public class Range {
         switch (u.range.field)
         {
             case FIELD.CIRCLE:
-                IsInCircle(u, target);
-                break;
+                return IsInCircle(u, target);
 
             case FIELD.FORWARD:
-                IsForward(u, target);
-                break;
+                return IsForward(u, target);
 
             case FIELD.GROUP:
                 return u.group.Contains(target);
@@ -151,11 +149,11 @@ public class Range {
         return false;
     }
 
-    public static bool IsInCircle(Unit u, Unit target)
+    private static bool IsInCircle(Unit u, Unit target)
     {
         // First step : field.
         float d = Vector3.Distance(u.transform.position, target.transform.position);
-        if (d > u.range.distance)
+        if (d > u.range.distance * Game.settings.distanceRatio)
         {
             return false;
         }
@@ -181,8 +179,20 @@ public class Range {
         return (angle <= u.range.angle / 2);
     }
 
-    public static bool IsForward(Unit u, Unit target)
-    {
-        return false;
+    private static bool IsForward(Unit u, Unit target, float epsilon = 0.2f)
+    {   
+        // First step : field.
+        float d = Vector3.Distance(u.transform.position, target.transform.position);
+        if (d > u.range.distance * Game.settings.distanceRatio)
+        {
+            return false;
+        }
+
+        // Second step : forward (with epsilon)
+        Vector3 trans = target.transform.position - u.transform.position;
+        Vector3 project = Vector3.Project(trans, u.transform.forward);
+        Vector3 ortho = trans - project;
+
+        return (ortho.sqrMagnitude < epsilon);
     }
 }

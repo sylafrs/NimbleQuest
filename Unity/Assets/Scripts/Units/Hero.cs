@@ -16,4 +16,13 @@ public class Hero : Unit {
             base.Start();
         }
     }
+
+    public override List<Group> GetEnemies()
+    {
+        List<Group> monsters = new List<Group>();
+        foreach (var mg in Game.monsterGroups)
+            monsters.Add(mg);
+
+        return monsters;
+    }
 }

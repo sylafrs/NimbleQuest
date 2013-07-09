@@ -37,12 +37,12 @@ public abstract class Unit : MonoBehaviour {
             return this.health;
         }
     }
-    public int HealthPercent
+    public float HealthPercent
     {
         get
         {
             if (this.maxHealth <= 0) return 0;
-            return this.health / this.maxHealth;
+            return Mathf.Clamp01((float)this.health / this.maxHealth);
         }
     }
 
@@ -107,17 +107,33 @@ public abstract class Unit : MonoBehaviour {
         // this.SetLifebar(); // No need for this
     }
 
-    public virtual bool Attack(Unit target)
-    {
-        if (this.remainingCooldown > 0)
-        {
-            return false;
-        }
-
-        target.health -= this.force;
+    public virtual void Attack(Unit target)
+    {  
         this.remainingCooldown = this.cooldown;
 
-        return true;       
+        Transform projectileT = this.transform.FindChild("Projectile");
+        if (projectileT)
+        {
+            Projectile projectile = projectileT.GetComponent<Projectile>();
+            if (projectile)
+            {
+                projectile.speed = this.attackSpeed;
+
+                projectile.OnDistanceLessThan(0.1f, () =>
+                {
+                    target.health -= this.force;
+                    target.SetLifebar();
+                });
+
+                projectile.Release(target.transform);
+
+                return;
+            }
+        }
+
+        Debug.Log("I need a projectile");
+        target.health -= this.force; 
+        target.SetLifebar();
     }
 
     protected virtual void Update()
@@ -145,7 +161,69 @@ public abstract class Unit : MonoBehaviour {
             }
         }
 
+        this.UpdateWeapon();
         this.UpdateLifebar();
+    }
+
+    public void UpdateWeapon()
+    {
+        remainingCooldown -= Time.deltaTime;
+        if (remainingCooldown < 0)
+        {
+            Unit u = this.GetNearestEnemyInRange();
+            if (u)
+            {
+                this.Attack(u);
+            }
+        }
+    }
+
+    public Unit GetNearestEnemyInRange() {
+
+        List<Unit> enemiesInRange = this.GetEnemiesInRange();
+        Unit nearestEnemy = null;
+
+        var e = enemiesInRange.GetEnumerator();
+        if(e.MoveNext()) 
+        {
+            float minDistance = Vector3.Distance(this.transform.position, e.Current.transform.position);
+            nearestEnemy = e.Current;            
+
+            while (e.MoveNext())
+            {
+                float distance = Vector3.Distance(this.transform.position, e.Current.transform.position);
+                if (distance < minDistance)
+                {
+                    nearestEnemy = e.Current;
+                    minDistance = distance;
+                }
+            }
+        }
+
+        return nearestEnemy;
+    }
+
+    public abstract List<Group> GetEnemies();
+
+    public List<Unit> GetEnemiesInRange()
+    {
+        List<Unit> inRangeUnits = new List<Unit>();
+        List<Group> enemies = GetEnemies();
+        foreach (var g in enemies)
+        {
+            if (Range.IsInRange(this, g.leader))
+            {
+                inRangeUnits.Add(g.leader);
+            }
+
+            foreach (var u in g.fellows)
+            {
+                if (Range.IsInRange(this, u))
+                    inRangeUnits.Add(u);
+            }
+        }
+
+        return inRangeUnits;
     }
 
     public void SetLifebar()
@@ -318,7 +396,6 @@ public abstract class Unit : MonoBehaviour {
     }
 
     protected virtual void BeforeMoveForward() { /* Nothing by default */ }
-    
 
     //public void OnGUI()
     //{

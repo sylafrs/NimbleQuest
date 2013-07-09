@@ -327,7 +327,7 @@ public class Monster : Unit
             }
         }
     }
-
+    
     public static bool InDangerField(Unit a, Unit b)
     {
         float d = Vector3.Distance(a.transform.position, b.transform.position);
@@ -374,5 +374,12 @@ public class Monster : Unit
         }
 
         return list;
+    }
+
+    public override List<Group> GetEnemies()
+    {
+        List<Group> g = new List<Group>();
+        g.Add(Game.hg);
+        return g;
     }
 }
