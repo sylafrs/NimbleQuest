@@ -25,7 +25,9 @@ public class Game : MonoBehaviour
         public int maxMonsterGroupCapacity = 3;     //< Taille max. d'un groupe de monstres
         public int securityMargin = 1;              //< Marge dans laquelle les monstres n'iront pas    
         public int securityDistance = 3;            //< Distance que les monstres tâcherons de respecter
-        public bool dontMoveHero = false;           //< Don't move our hero
+        public bool dontMoveHero = false;           //< Empêche le héros de bouger
+        public float distanceRatio = 1;             //< Ratio pour la range
+        public float minMonsterRotationTime = 0.2f; //< Temps minimal que doit attendre un monstre pour changer d'orientation (Prioritaire aux collisions)
         public AnimationCurve spawnChancesOverTime; //< Courbe : Chances qu'un monstre spawn dans le temps, une fois le temps min. dépassé.
         public Hero[] heroesPrefabs;                //< Prefab des unités jouables
         public Monster[] monsterPrefabs;            //< Prefab des unités ennemies
@@ -100,6 +102,26 @@ public class Game : MonoBehaviour
 
         min = floor.renderer.bounds.min;
         max = floor.renderer.bounds.max;
+    }
+
+    public void OnDrawGizmos()
+    {
+        if (Application.loadedLevelName.Equals("scene"))
+        {
+            // Get the level dimensions
+            Vector3 min, max;
+            Game.GetMinMaxLevel(out min, out max);
+            Rect zone = RectUtility.MinMaxRect(min, max);
+
+            RectUtility.GizmosRect(zone);
+
+            zone.x += Game.settings.securityMargin;
+            zone.y += Game.settings.securityMargin;
+            zone.width -= (Game.settings.securityMargin * 2);
+            zone.height -= (Game.settings.securityMargin * 2);
+
+            RectUtility.GizmosRect(zone);
+        }
     }
 
     public static void LaunchGame(Hero selectedLeader)

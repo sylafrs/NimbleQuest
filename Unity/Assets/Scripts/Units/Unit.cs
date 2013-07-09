@@ -190,28 +190,31 @@ public abstract class Unit : MonoBehaviour {
         this.transform.position += forward * GetSpeed();
     }
 
-    private void UpdatePosition()
+    public void UpdatePosition()
     {
-        int position = this.group.GetUnitPosition(this);
-        Unit previous = this.group.GetUnitAtPosition(position - 1);
-        if (previous == null)
+        if (this.speed > 0)
         {
-            throw new System.InvalidOperationException("This guy is the leader");
-        }
+            int position = this.group.GetUnitPosition(this);
+            Unit previous = this.group.GetUnitAtPosition(position - 1);
+            if (previous == null)
+            {
+                throw new System.InvalidOperationException("This guy is the leader");
+            }
 
-        // A remplacer par : if le checkpoint du précédent est le meme que le mien.
-        if (previous.orientation == this.orientation)
-        {
-            Vector3 previousPosition = previous.transform.position;
-            Vector3 space = OrientationUtility.ToVector3(this.orientation) * Game.settings.distanceUnits;
-            Vector3 idealPosition = previousPosition - space;
+            // A remplacer par : if le checkpoint du précédent est le meme que le mien.
+            if (previous.orientation == this.orientation)
+            {
+                Vector3 previousPosition = previous.transform.position;
+                Vector3 space = OrientationUtility.ToVector3(this.orientation) * Game.settings.distanceUnits;
+                Vector3 idealPosition = previousPosition - space;
 
-            //this.transform.position = idealPosition;
-            this.transform.position = Vector3.Lerp(this.transform.position, idealPosition, Time.deltaTime * Game.settings.fellowSmoothSpeed);
-        }
-        else
-        {
-            MoveForward();
+                //this.transform.position = idealPosition;
+                this.transform.position = Vector3.Lerp(this.transform.position, idealPosition, Time.deltaTime * Game.settings.fellowSmoothSpeed);
+            }
+            else
+            {
+                MoveForward();
+            }
         }
     }
 

@@ -152,7 +152,17 @@ public class Group {
 
         fellow.group = this;
         this.fellowPaths.Add(fellow, new FellowPath(this));
+
+        int l = this.fellows.Count;
+        if(l == 0) {
+            fellow.orientation = leader.orientation;
+        }
+        else {
+            fellow.orientation = fellows[l - 1].orientation;
+        }
+
         this.fellows.Add(fellow);
+        fellow.UpdatePosition();
         
         return this;
     }

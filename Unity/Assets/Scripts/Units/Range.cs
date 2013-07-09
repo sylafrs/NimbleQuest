@@ -24,24 +24,28 @@ public class Range {
 
     public void OnDrawGizmos(Unit u)
     {
-        Color oldC = Gizmos.color;
-
-        switch (field)
+        if (Game.started)
         {
-            case FIELD.CIRCLE:
-                Gizmos.color = Color.green;
-                Gizmos.DrawWireSphere(u.transform.position, distance);
-                Gizmos.color = Color.blue;
-                //Gizmos.DrawLine(u.transform.position, 
-                break;
-            case FIELD.FORWARD:
-                break;
-            case FIELD.GROUP:
-                break;
-            default: // FIELD.NONE
-                break;
-        }
 
-        Gizmos.color = oldC;
+            Color oldC = Gizmos.color;
+
+            switch (field)
+            {
+                case FIELD.CIRCLE:
+                    Gizmos.color = Color.green;
+                    Gizmos.DrawWireSphere(u.transform.position, distance * Game.settings.distanceRatio);
+                    Gizmos.color = Color.blue;
+                    //Gizmos.DrawLine(u.transform.position, 
+                    break;
+                case FIELD.FORWARD:
+                    break;
+                case FIELD.GROUP:
+                    break;
+                default: // FIELD.NONE
+                    break;
+            }
+
+            Gizmos.color = oldC;
+        }
     }
 }

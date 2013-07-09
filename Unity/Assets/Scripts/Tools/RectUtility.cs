@@ -36,6 +36,21 @@ public static class RectUtility {
         Debug.DrawLine(d, a);
     }
 
+    public static void GizmosRect(Rect r)
+    {
+        Vector3 a, b, c, d;
+
+        a = new Vector3(r.xMin, 0, r.yMin);
+        b = new Vector3(r.xMax, 0, r.yMin);
+        c = new Vector3(r.xMax, 0, r.yMax);
+        d = new Vector3(r.xMin, 0, r.yMax);
+
+        Gizmos.DrawLine(a, b);
+        Gizmos.DrawLine(b, c);
+        Gizmos.DrawLine(c, d);
+        Gizmos.DrawLine(d, a);
+    }
+
     public static bool ContainsXZ(Rect r, Vector3 p)
     {
         p.y = p.z;
