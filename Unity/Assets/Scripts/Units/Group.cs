@@ -280,7 +280,7 @@ public class Group {
 
     public virtual void OnLeaderDeath() {
 
-        Debug.Log("Mountain of corpses *u*");
+        Debug.Log("[LEADER DEATH]\nLeader : " + this.leader.name);
 
         List<Unit> mustDIE = new List<Unit>(this.fellows);
         foreach (var f in mustDIE)
@@ -381,4 +381,32 @@ public class Group {
 
         return slowestUnit;
     }
+
+    public void Heal()
+    {
+        this.broadcastAttack(AttackType.HEAL, 10000);        
+    }
+
+    public void broadcastAttack(AttackType type, int force)
+    {
+        this.leader.ReceiveAttack(type, force);
+        foreach (var f in this.fellows)
+        {
+            f.ReceiveAttack(type, force);
+        }
+    }
+
+    public void KillLast()
+    {
+        int c = this.fellows.Count;
+        if (c > 0)
+        {
+            this.fellows[c - 1].ReceiveAttack(AttackType.DAMAGES, 10000);
+        }
+        else
+        {
+            this.leader.ReceiveAttack(AttackType.DAMAGES, 10000);
+        }
+    }
+
 }

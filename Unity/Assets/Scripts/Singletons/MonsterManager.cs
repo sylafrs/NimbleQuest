@@ -163,6 +163,11 @@ public class MonsterManager : MonoBehaviour {
         else
         {
             prefabs = new List<Monster>(Game.settings.monsterPrefabs);
+            foreach (var m in Game.settings.monsterPrefabs)
+            {
+                if (m.FellowOnly)
+                    prefabs.Remove(m);
+            }
         }
 
         if (monsterPrefab == null && prefabs != null)

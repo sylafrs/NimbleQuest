@@ -15,6 +15,7 @@ public class Monster : Unit
 
     public bool Racist = false;
     public bool BossOnly = false;
+    public bool FellowOnly = false; // => Weak
     public bool Weak = false;
     public bool Unique = false;
 
@@ -360,12 +361,12 @@ public class Monster : Unit
 
         if (includeHeros)
         {
-            if (InDangerField(this, Game.hg.leader))
+            if (InDangerField(this, Game.heroicGroup.leader))
             {
-                list.Add(Game.hg.leader);
+                list.Add(Game.heroicGroup.leader);
             }
 
-            foreach (var f in Game.hg.fellows)
+            foreach (var f in Game.heroicGroup.fellows)
             {
                 if (InDangerField(this, f))
                 {
@@ -381,7 +382,7 @@ public class Monster : Unit
     {
         List<Group> g = new List<Group>();        
 
-        g.Add(Game.hg);
+        g.Add(Game.heroicGroup);
 
         return g;
     }

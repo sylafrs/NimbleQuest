@@ -98,7 +98,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: d3639fa63460f3b4c833ee486fdfcc2f, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -155,10 +155,12 @@ MonoBehaviour:
   attackSpeed: 0
   cooldown: 3.20000005
   maxHealth: 130
+  weapon: {fileID: 0}
   orientation: 0
   Speed: 1
   Racist: 0
   BossOnly: 0
+  FellowOnly: 1
   Weak: 1
   Unique: 1
   FixedOrientationChangement: -1

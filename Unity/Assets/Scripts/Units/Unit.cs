@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 public enum AttackType
 {
-    KILL,
     DAMAGES,
     HEAL,
     SLOW
@@ -79,7 +78,9 @@ public abstract class Unit : MyMonoBehaviour {
     protected virtual void Start()
     {
         this.health = this.maxHealth;
-        this.AttachLifeBar();        
+        this.AttachLifeBar();
+        if(this.weapon)
+            this.weapon.Init(this);        
     }
 
     private void AttachLifeBar()
@@ -108,46 +109,47 @@ public abstract class Unit : MyMonoBehaviour {
         // this.SetLifebar(); // No need for this
     }
 
-    public virtual void Attack(Unit target)
+    public virtual bool Attack(Unit target)
     {
-        if (type == AttackType.HEAL && target.health == target.maxHealth)
-            return;
+        if (target.health == 0 && type == AttackType.DAMAGES)
+            return false;
 
-        if (type == AttackType.DAMAGES && target.health == 0)
-            return;               
+        if (target.health == target.maxHealth && type == AttackType.HEAL)
+            return false;
 
         this.remainingCooldown = this.cooldown;
                 
         if (weapon)
         {
-            weapon.SetSpeed(this.attackSpeed);
-
             weapon.OnDistanceLessThan(0.1f, () =>
             {
                 target.ReceiveAttack(this.type, this.force);
             });
 
             weapon.Fire(target.transform);
-            return;
+            return true;
         }        
 
-        Debug.Log("I need a weapon");
+        Debug.Log("I (" + this.name + ") need a weapon");
         target.ReceiveAttack(this.type, this.force);
+        return true;
     }
 
     public void ReceiveAttack(AttackType type, int force)
     {
         if (type == AttackType.DAMAGES)
         {
-            this.health = Mathf.Clamp(this.health - this.force, 0, this.maxHealth);
-            this.SetLifebar();
+            this.health = Mathf.Clamp(this.health - force, 0, this.maxHealth); 
+            Debug.Log("[RECEIVES DAMAGES]\nUnit : " + name + "\nDamages : " + force);
         }
 
         if (type == AttackType.HEAL)
-        {
-            this.health = Mathf.Clamp(this.health + this.force, 0, this.maxHealth);
-            this.SetLifebar();
+        {            
+            this.health = Mathf.Clamp(this.health + force, 0, this.maxHealth);
+            Debug.Log("[RECEIVES HEAL]\nUnit : " + name + "\nRecovery : " + force);      
         }
+
+        this.SetLifebar();  
     }
 
     protected virtual void Update()
@@ -157,8 +159,12 @@ public abstract class Unit : MyMonoBehaviour {
 
         if (this.health == 0)
         {
-            this.OnDying();
-            return;
+            // Little cheat : undead mode :)
+            if ((!(this is Hero) || !IsLeader && !Game.settings.undeadMode))
+            {
+                this.OnDying();
+                return;
+            }
         }
 
         if (this.remainingCooldown > 0)
@@ -187,7 +193,7 @@ public abstract class Unit : MyMonoBehaviour {
         this.CheckWall();
     }
 
-    public void UpdateWeapon()
+    private void UpdateWeapon()
     {
         remainingCooldown -= Time.deltaTime;
         if (remainingCooldown < 0)
@@ -197,7 +203,8 @@ public abstract class Unit : MyMonoBehaviour {
                 List<Unit> units = this.GetTargetsInRange();
                 foreach (var u in units)
                 {
-                    this.Attack(u);
+                    if(this.Attack(u))
+                        break; // Otherwise the healer is really too cheated !
                 }
             }
             else
@@ -271,12 +278,12 @@ public abstract class Unit : MyMonoBehaviour {
                 if (Range.IsInRange(this, u))
                     inRangeUnits.Add(u);
             }
-        }
+        }               
 
         return inRangeUnits;
     }
 
-    public void SetLifebar()
+    private void SetLifebar()
     {        
         if (lifebar)
         {
@@ -298,7 +305,7 @@ public abstract class Unit : MyMonoBehaviour {
         }
     }
 
-    public void UpdateLifebar()
+    private void UpdateLifebar()
     {
         const float FADE_FINISHED = -10;
 
@@ -343,7 +350,7 @@ public abstract class Unit : MyMonoBehaviour {
 
     protected virtual void OnDying()
     {
-        Debug.Log("Arrrgh !");
+        Debug.Log("[UNIT DEATH : " + this.name + "]");
         group.OnFellowDeath(this);
     }
 

@@ -40,15 +40,23 @@ public class Game : MonoBehaviour
         public int maxMonsterGroupCapacity = 3;     //< Taille max. d'un groupe de monstres
         public int securityMargin = 1;              //< Marge dans laquelle les monstres n'iront pas    
         public int securityDistance = 3;            //< Distance que les monstres tâcherons de respecter
-        public bool dontMoveHero = false;           //< Empêche le héros de bouger
         public float distanceRatio = 1;             //< Ratio pour la range
         public float minMonsterRotationTime = 0.2f; //< Temps minimal que doit attendre un monstre pour changer d'orientation (Prioritaire aux collisions)
         public float timeShowingLife = 5;           //< Temps durant lequel on montre la vie (opaque)
-        public float forwardFieldWidth = 1;         //< Marge d'erreur pour viser 'tout droit'
+        public float forwardFieldWidth = 1;         //< Marge d'erreur pour viser 'tout droit'    
+        public float itemSize = 1;                  //< Taille d'un item (pour passer dessus. utilise distanceRatio)
+        public float itemTime = 10;                 //< Durée d'apparition maximale d'un objet
+        public float ChancesOverTenToGetItem = 5;   //< La chance d'avoir un item (/10)
+
+        public bool dontMoveHero = false;           //< Empêche le héros de bouger
+        public bool dontKillWithWalls = false;      //< Empêche le héros de mourir en traversant les murs.
+        public bool undeadMode = false;                //< Empêche de mourir.. ..si on a plus de vie
+
         public AnimationCurve spawnChancesOverTime; //< Courbe : Chances qu'un monstre spawn dans le temps, une fois le temps min. dépassé.
         public Hero[] heroesPrefabs;                //< Prefab des unités jouables
         public Monster[] monsterPrefabs;            //< Prefab des unités ennemies
-        public GameObject lifeBarPrefab;
+        public GameObject lifeBarPrefab;            //< Prefab des barres de vie
+        public Item[] itemsPrefab;                  //< Prefab des items
 
         public GIZMOSTYPE GizmosType;
     }
@@ -57,6 +65,7 @@ public class Game : MonoBehaviour
 
     public Settings setSettings;
     private MonsterManager monsters;
+    private ItemManager items;
 
     private void Awake()
     {
@@ -82,8 +91,9 @@ public class Game : MonoBehaviour
 
         monsters = instance.gameObject.AddComponent<MonsterManager>();
         instance.gameObject.AddComponent<InputManager>();
+        items = instance.gameObject.AddComponent<ItemManager>();
 
-        Camera.main.GetComponent<FollowOffset>().target = hg.leader.transform;
+        Camera.main.GetComponent<FollowOffset>().target = heroicGroup.leader.transform;
         state = State.PLAYING;        
     }
 
@@ -104,7 +114,7 @@ public class Game : MonoBehaviour
         leader.transform.parent = heroes;
         leader.name = selectedLeader.name;
 
-        hg = new HeroicGroup(leader.GetComponent<Hero>());
+        heroicGroup = new HeroicGroup(leader.GetComponent<Hero>());
     }
 
     private void OnGUI()
@@ -166,7 +176,7 @@ public class Game : MonoBehaviour
 
     public static bool started = false;
     public static Settings settings;
-    public static HeroicGroup hg;
+    public static HeroicGroup heroicGroup;
     public static List<MonsterGroup> monsterGroups;
     public static int deathCounter;
 
@@ -224,6 +234,7 @@ public class Game : MonoBehaviour
     public static void OnBossDeath(MonsterGroup e)
     {
         instance.monsters.OnBossDeath(e);
+        instance.items.OnBossDeath(e);        
     }
 
     public static void OnPauseButton()
@@ -260,14 +271,14 @@ public class Game : MonoBehaviour
 
     public static void OnDirectionKey(Orientation o)
     {
-        hg.NewOrientation(o);
+        heroicGroup.NewOrientation(o);
     }
 
     public static void OnUnitHitsWall(Unit u)
     {
-        if (u is Hero && u.IsLeader)
-            OnLeaderDeath();
-        else
+        if (u is Hero && u.IsLeader && !Game.settings.dontKillWithWalls)
+            u.ReceiveAttack(AttackType.DAMAGES, 10000);
+        else if (!Game.settings.dontKillWithWalls)
             Debug.Log(u.name + " hits a wall");
     }
 

@@ -51,9 +51,19 @@ public static class RectUtility {
         Gizmos.DrawLine(d, a);
     }
 
+    public static Rect FromCenter(Vector3 center, float size)
+    {
+        return FromCenter(center, size, size);
+    }
+
+    public static Rect FromCenter(Vector3 center, float width, float height)
+    {
+        return Rect.MinMaxRect(center.x - width / 2, center.z - height / 2, center.x + width / 2, center.z + height / 2);
+    }
+
     public static bool ContainsXZ(Rect r, Vector3 p)
     {
-        p.y = p.z;
+        p.y = p.z;        
         return r.Contains(p);
     }
 }

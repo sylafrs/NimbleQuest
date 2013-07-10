@@ -36,8 +36,8 @@ public class UnitsWindow : EditorWindow
 
         EditorGUILayout.LabelField("====== HEROIC GROUP ======");
 
-        DebugUnit(Game.hg.leader);
-        foreach (var u in Game.hg.fellows)
+        DebugUnit(Game.heroicGroup.leader);
+        foreach (var u in Game.heroicGroup.fellows)
         {
             DebugUnit(u);
         }

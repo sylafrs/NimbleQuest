@@ -50,11 +50,16 @@ MonoBehaviour:
     maxMonsterGroupCapacity: 3
     securityMargin: 10
     securityDistance: 22
-    dontMoveHero: 0
     distanceRatio: 10
     minMonsterRotationTime: .200000003
     timeShowingLife: 5
     forwardFieldWidth: 4
+    itemSize: 2
+    itemTime: 10
+    ChancesOverTenToGetItem: 5
+    dontMoveHero: 0
+    dontKillWithWalls: 1
+    undeadMode: 1
     spawnChancesOverTime:
       serializedVersion: 2
       m_Curve:
@@ -85,6 +90,13 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 0a8a47a3c31ca884aaa5036da701b648, type: 2}
     - {fileID: 11400000, guid: 4240bae44d4a96649b4e1bc7e5bb5f3c, type: 2}
     lifeBarPrefab: {fileID: 100002, guid: 6b23480c6d6124d4c8ffa3993c534112, type: 2}
+    itemsPrefab:
+    - {fileID: 11400000, guid: b1be4bbeadc6f424ebcb362a5866aaac, type: 2}
+    - {fileID: 11400000, guid: 7f116ea4951169147b37517e0eed51b2, type: 2}
+    - {fileID: 11400000, guid: 01e210cc1249f3f4ba0765ff238b8c6f, type: 2}
+    - {fileID: 11400000, guid: 45a83efee0cd5014bb57f6a4353ae276, type: 2}
+    - {fileID: 11400000, guid: 30dbd87cb3d319a488134849edd75f16, type: 2}
+    - {fileID: 11400000, guid: 76dd6ded890940940a0bad6a3833e4f2, type: 2}
     GizmosType: 2
 --- !u!1001 &100100000
 Prefab:
