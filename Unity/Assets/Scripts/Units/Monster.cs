@@ -17,6 +17,7 @@ public class Monster : Unit
     public bool BossOnly = false;
     public bool Weak = false;
     public bool Unique = false;
+
     public float FixedOrientationChangement = -1;
 
     protected override void Start()
@@ -378,8 +379,16 @@ public class Monster : Unit
 
     public override List<Group> GetEnemies()
     {
-        List<Group> g = new List<Group>();
+        List<Group> g = new List<Group>();        
+
         g.Add(Game.hg);
+
         return g;
+    }
+
+    protected override void OnDying()
+    {
+        Game.OnMonsterKilled(this);
+        base.OnDying();
     }
 }

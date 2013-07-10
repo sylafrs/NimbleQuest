@@ -12,6 +12,7 @@ public class HeroicGroup : Group {
 
     public override void OnLeaderDeath()
     {
+        base.OnLeaderDeath();
         Game.OnLeaderDeath();
     }
 }

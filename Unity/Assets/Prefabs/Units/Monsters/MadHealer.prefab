@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39911645897de11459e05193a66543d6, type: 3}
   m_Name: 
   type: 2
-  force: 0
+  force: 10000
   range:
     field: 3
     angle: 0

@@ -44,6 +44,7 @@ public class Game : MonoBehaviour
         public float distanceRatio = 1;             //< Ratio pour la range
         public float minMonsterRotationTime = 0.2f; //< Temps minimal que doit attendre un monstre pour changer d'orientation (Prioritaire aux collisions)
         public float timeShowingLife = 5;           //< Temps durant lequel on montre la vie (opaque)
+        public float forwardFieldWidth = 1;         //< Marge d'erreur pour viser 'tout droit'
         public AnimationCurve spawnChancesOverTime; //< Courbe : Chances qu'un monstre spawn dans le temps, une fois le temps min. dépassé.
         public Hero[] heroesPrefabs;                //< Prefab des unités jouables
         public Monster[] monsterPrefabs;            //< Prefab des unités ennemies
@@ -76,6 +77,7 @@ public class Game : MonoBehaviour
 
     private void OnMainSceneLoaded()
     {
+        deathCounter = 0;
         CreateHeroicGroup();
 
         monsters = instance.gameObject.AddComponent<MonsterManager>();
@@ -109,7 +111,7 @@ public class Game : MonoBehaviour
     {
         if (state == State.PLAYING)
         {
-            // Something.. later :)
+            GUILayout.Label("Death counter : " + deathCounter + " / 50");
         }
         if (state == State.PAUSED)
         {
@@ -118,10 +120,10 @@ public class Game : MonoBehaviour
                 OnResume();
             }
 
-            if (GUILayout.Button("Restart"))
-            {
-                OnRestart();
-            }
+            //if (GUILayout.Button("Restart"))
+            //{
+            //    OnRestart();
+            //}
 
             if (Camera.main.audio.mute)
             {
@@ -151,10 +153,10 @@ public class Game : MonoBehaviour
                 OnExit();
             }
 
-            if (GUILayout.Button("Retry"))
-            {
-                OnRestart();
-            }
+            //if (GUILayout.Button("Retry"))
+            //{
+            //    OnRestart();
+            //}
         }
     }
 
@@ -166,6 +168,7 @@ public class Game : MonoBehaviour
     public static Settings settings;
     public static HeroicGroup hg;
     public static List<MonsterGroup> monsterGroups;
+    public static int deathCounter;
 
     public static State state { get; private set; }
 
@@ -266,5 +269,10 @@ public class Game : MonoBehaviour
             OnLeaderDeath();
         else
             Debug.Log(u.name + " hits a wall");
+    }
+
+    public static void OnMonsterKilled(Monster m)
+    {
+        deathCounter++;
     }
 }

@@ -122,7 +122,7 @@ public class UnitsWindow : EditorWindow
             string str = "";
             for (int i = 0; i < 10; i++)
             {
-                if (percent >= 0.1f * i)
+                if (percent > 0.1f * i)
                 {
                     str += "|";
                 }

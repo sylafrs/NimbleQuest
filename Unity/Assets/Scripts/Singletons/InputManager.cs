@@ -56,6 +56,14 @@ public class InputManager : MonoBehaviour {
         {
             pauseState = false;
         }
+
+        // Debug mode
+        #if UNITY_EDITOR
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                Game.settings.dontMoveHero = !Game.settings.dontMoveHero;
+            }
+        #endif
     }
 
 }

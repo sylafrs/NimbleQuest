@@ -279,14 +279,25 @@ public class Group {
     }
 
     public virtual void OnLeaderDeath() {
-        foreach (var f in this.fellows)
+
+        Debug.Log("Mountain of corpses *u*");
+
+        List<Unit> mustDIE = new List<Unit>(this.fellows);
+        foreach (var f in mustDIE)
         {
             f.OnLeaderDeath();
         }
+
+        this.leader.DestroyObject();
     }
 
     public void OnLeaderOrientationChangement()
     {
+        if (!leader)
+        {
+            return;
+        }
+
         if (leader.GetBaseSpeed() == 0)
         {
             return;

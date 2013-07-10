@@ -116,7 +116,10 @@ public class Range {
                     ShowCircle(u.transform.position, u.transform.forward, u.transform.right, u.range.angle, u.range.distance);
                     break;
                 case FIELD.FORWARD:
-                    Gizmos.DrawLine(u.transform.position, u.transform.position + (u.transform.forward * u.range.distance * Game.settings.distanceRatio));
+                    Vector3 maxPos = u.transform.position + (u.transform.forward * u.range.distance * Game.settings.distanceRatio);                    
+                    Gizmos.DrawLine(u.transform.position + (u.transform.right * Game.settings.forwardFieldWidth), u.transform.position - (u.transform.right * Game.settings.forwardFieldWidth));
+                    Gizmos.DrawLine(u.transform.position, maxPos);
+                    Gizmos.DrawLine(maxPos + (u.transform.right * Game.settings.forwardFieldWidth), maxPos - (u.transform.right * Game.settings.forwardFieldWidth));
                     break;
 
                 case FIELD.GROUP:
@@ -140,7 +143,7 @@ public class Range {
                 return IsInCircle(u, target);
 
             case FIELD.FORWARD:
-                return IsForward(u, target);
+                return IsForward(u, target, Game.settings.forwardFieldWidth);
 
             case FIELD.GROUP:
                 return u.group.Contains(target);
@@ -194,6 +197,6 @@ public class Range {
         Vector3 project = Vector3.Project(trans, forward);
         Vector3 ortho = trans - project;
 
-        return (ortho.sqrMagnitude < epsilon);
+        return (project.normalized == forward) && (ortho.sqrMagnitude < epsilon);
     }
 }

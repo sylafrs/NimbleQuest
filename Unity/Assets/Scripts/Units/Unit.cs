@@ -24,6 +24,7 @@ public abstract class Unit : MyMonoBehaviour {
     public float attackSpeed;
     public float cooldown;
     public int maxHealth;
+    public Weapon weapon;
 
     protected float speed;
     
@@ -108,34 +109,45 @@ public abstract class Unit : MyMonoBehaviour {
     }
 
     public virtual void Attack(Unit target)
-    {  
+    {
+        if (type == AttackType.HEAL && target.health == target.maxHealth)
+            return;
+
+        if (type == AttackType.DAMAGES && target.health == 0)
+            return;               
+
         this.remainingCooldown = this.cooldown;
-
-        Transform projectileT = this.transform.FindChild("Projectile");
-        if (projectileT)
+                
+        if (weapon)
         {
-            Projectile projectile = projectileT.GetComponent<Projectile>();
-            if (projectile)
+            weapon.SetSpeed(this.attackSpeed);
+
+            weapon.OnDistanceLessThan(0.1f, () =>
             {
-                projectile.speed = this.attackSpeed;
+                target.ReceiveAttack(this.type, this.force);
+            });
 
-                projectile.OnDistanceLessThan(0.1f, () =>
-                {
-                    target.health -= this.force;
-                    target.SetLifebar();
-                    Mathf.Clamp(target.health, 0, target.maxHealth);
-                });
+            weapon.Fire(target.transform);
+            return;
+        }        
 
-                projectile.Release(target.transform);
+        Debug.Log("I need a weapon");
+        target.ReceiveAttack(this.type, this.force);
+    }
 
-                return;
-            }
+    public void ReceiveAttack(AttackType type, int force)
+    {
+        if (type == AttackType.DAMAGES)
+        {
+            this.health = Mathf.Clamp(this.health - this.force, 0, this.maxHealth);
+            this.SetLifebar();
         }
 
-        Debug.Log("I need a projectile");
-        target.health -= this.force; 
-        target.SetLifebar();
-        Mathf.Clamp(target.health, 0, target.maxHealth);
+        if (type == AttackType.HEAL)
+        {
+            this.health = Mathf.Clamp(this.health + this.force, 0, this.maxHealth);
+            this.SetLifebar();
+        }
     }
 
     protected virtual void Update()
@@ -180,46 +192,74 @@ public abstract class Unit : MyMonoBehaviour {
         remainingCooldown -= Time.deltaTime;
         if (remainingCooldown < 0)
         {
-            Unit u = this.GetNearestEnemyInRange();
-            if (u)
+            if (this.range.field == Range.FIELD.GROUP)
             {
-                this.Attack(u);
+                List<Unit> units = this.GetTargetsInRange();
+                foreach (var u in units)
+                {
+                    this.Attack(u);
+                }
+            }
+            else
+            {
+                Unit u = this.GetNearestTargetInRange();
+                if (u)
+                {
+                    this.Attack(u);
+                }
             }
         }
     }
 
-    public Unit GetNearestEnemyInRange() {
+    public Unit GetNearestTargetInRange()
+    {
+        List<Unit> targets = this.GetTargetsInRange();
+        Unit nearest = null;
 
-        List<Unit> enemiesInRange = this.GetEnemiesInRange();
-        Unit nearestEnemy = null;
-
-        var e = enemiesInRange.GetEnumerator();
+        var e = targets.GetEnumerator();
         if(e.MoveNext()) 
         {
             float minDistance = Vector3.Distance(this.transform.position, e.Current.transform.position);
-            nearestEnemy = e.Current;            
+            nearest = e.Current;            
 
             while (e.MoveNext())
             {
                 float distance = Vector3.Distance(this.transform.position, e.Current.transform.position);
                 if (distance < minDistance)
                 {
-                    nearestEnemy = e.Current;
+                    nearest = e.Current;
                     minDistance = distance;
                 }
             }
         }
 
-        return nearestEnemy;
+        return nearest;
     }
 
     public abstract List<Group> GetEnemies();
 
-    public List<Unit> GetEnemiesInRange()
+    public List<Group> GetTargets()
+    {
+        List<Group> g = null;
+
+        if (this.range.field == Range.FIELD.GROUP)
+        {
+            g = new List<Group>();
+            g.Add(this.group);
+        }
+        else
+        {
+            g = this.GetEnemies();
+        }
+
+        return g;
+    }
+
+    public List<Unit> GetTargetsInRange()
     {
         List<Unit> inRangeUnits = new List<Unit>();
-        List<Group> enemies = GetEnemies();
-        foreach (var g in enemies)
+        List<Group> targets = GetTargets();
+        foreach (var g in targets)
         {
             if (Range.IsInRange(this, g.leader))
             {
@@ -303,6 +343,7 @@ public abstract class Unit : MyMonoBehaviour {
 
     protected virtual void OnDying()
     {
+        Debug.Log("Arrrgh !");
         group.OnFellowDeath(this);
     }
 
@@ -429,7 +470,7 @@ public abstract class Unit : MyMonoBehaviour {
     public override void DestroyObject()
     {
         if(this.lifebar)
-            GameObject.Destroy(this.lifebar);
+            GameObject.Destroy(this.lifebar.gameObject);
 
         base.DestroyObject();
     }

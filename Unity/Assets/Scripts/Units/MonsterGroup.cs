@@ -12,6 +12,7 @@ public class MonsterGroup : Group {
 
     public override void OnLeaderDeath()
     {
+        base.OnLeaderDeath();
         Game.OnBossDeath(this);
     }
 }

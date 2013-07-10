@@ -54,6 +54,7 @@ MonoBehaviour:
     distanceRatio: 10
     minMonsterRotationTime: .200000003
     timeShowingLife: 5
+    forwardFieldWidth: 4
     spawnChancesOverTime:
       serializedVersion: 2
       m_Curve:
