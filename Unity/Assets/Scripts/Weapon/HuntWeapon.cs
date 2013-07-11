@@ -19,12 +19,13 @@ public class HuntWeapon : Weapon
 
         bullet.transform.parent = GameObject.Find("Units/Bullets").transform;
 
-        rw.speed = speed;
-        rw.distance = distance;
-        rw.callback = callback;
-        rw.target = target;
-        rw.ellapsedTime = 0;
-        rw.initPosition = this.transform.position;
+        rw.speed                = this.speed;
+        rw.distance             = this.distance;
+        rw.onHit                = this.onHit;
+        rw.onTargetReached      = this.onTargetReached;
+        rw.target               = target;
+        rw.ellapsedTime         = 0;
+        rw.initPosition         = this.transform.position;
 
         bullet.SetActive(true);
     }
@@ -57,5 +58,6 @@ public class HuntWeapon : Weapon
     protected override void Hit()
     {
         GameObject.Destroy(this.gameObject);
+        base.Hit();
     }
 }

@@ -56,6 +56,9 @@ public abstract class Unit : MyMonoBehaviour {
     private FollowAtOrtho lifebar;
     private Transform innerLifebar;
     private float timeRemainingShowingLife;
+
+    private float freezeTime;
+    private GameObject FreezeFeedback;
     
     public bool IsInGroup
     {
@@ -83,6 +86,7 @@ public abstract class Unit : MyMonoBehaviour {
         this.reload = false;
         this.health = this.maxHealth;
         this.AttachLifeBar();
+        this.freezeTime = 0;
         if(this.weapon)
             this.weapon.Init(this);        
     }
@@ -120,16 +124,21 @@ public abstract class Unit : MyMonoBehaviour {
         
         if (target.health == target.maxHealth && type == AttackType.HEAL)
             return false;
+
+        if (target.freezeTime >= this.force && type == AttackType.SLOW)
+            return false;
         
         this.reload = true;
         this.remainingCooldown = this.cooldown;        
                 
         if (weapon)
         {            
-            weapon.OnDistanceLessThan(0.1f, () =>
-            {
-                target.ReceiveAttack(this.type, this.force);
-                this.reload = false;
+            weapon.OnDistanceLessThan(0.1f, () => {
+                target.ReceiveAttack(this.type, this.force);                
+            });
+
+            weapon.OnHit(() => {
+                this.reload = false;   
             });
 
             weapon.Fire(target.transform);
@@ -156,6 +165,12 @@ public abstract class Unit : MyMonoBehaviour {
         {            
             this.health = Mathf.Clamp(this.health + force, 0, this.maxHealth);
             Debug.Log("[RECEIVES HEAL]\nUnit : " + name + "\nRecovery : " + force);      
+        }
+
+        if (type == AttackType.SLOW)
+        {
+            this.freezeTime = Mathf.Max(this.freezeTime, force);
+            Debug.Log("[RECEIVES SLOW]\nUnit : " + name + "\nTime : " + force);
         }
 
         this.SetLifebar();  
@@ -198,6 +213,7 @@ public abstract class Unit : MyMonoBehaviour {
 
         this.UpdateWeapon();
         this.UpdateLifebar();
+        this.UpdateFreeze();
 
         this.CheckWall();
     }
@@ -214,8 +230,13 @@ public abstract class Unit : MyMonoBehaviour {
                         
                 foreach (var u in units)
                 {
-                    if (u != null && this.Attack(u))
-                        break;
+                    if (u != null)
+                    {
+                        this.Attack(u);
+                    }
+                    // Was used to focus only one unit :
+                    //if (u != null && this.Attack(u))
+                    //    break; 
                 }           
             }
         }
@@ -396,6 +417,11 @@ public abstract class Unit : MyMonoBehaviour {
 
     public float GetBaseSpeed()
     {
+        if (freezeTime > 0)
+        {
+            return speed * Game.settings.freezeMult;
+        }
+
         return speed;
     }
 
@@ -473,6 +499,29 @@ public abstract class Unit : MyMonoBehaviour {
             GameObject.Destroy(this.lifebar.gameObject);
 
         base.DestroyObject();
+    }
+
+    private void UpdateFreeze()
+    {
+        if (FreezeFeedback)
+        {
+            freezeTime -= Time.deltaTime;
+            if (freezeTime <= 0)
+            {
+                GameObject.Destroy(FreezeFeedback);
+                FreezeFeedback = null;
+                freezeTime = 0;
+            }
+        }
+        else
+        {
+            if (freezeTime > 0)
+            {
+                FreezeFeedback = GameObject.Instantiate(Game.settings.freezeFeedbackPrefab) as GameObject;
+                FreezeFeedback.transform.parent = this.transform;
+                FreezeFeedback.transform.localPosition = Vector3.zero;
+            }
+        }
     }
 
 #if GUI_ACTIVE

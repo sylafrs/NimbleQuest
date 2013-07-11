@@ -43,6 +43,7 @@ public class Game : MonoBehaviour
         public float distanceRatio = 1;             //< Ratio pour la range
         public float minMonsterRotationTime = 0.2f; //< Temps minimal que doit attendre un monstre pour changer d'orientation (Prioritaire aux collisions)
         public float timeShowingLife = 5;           //< Temps durant lequel on montre la vie (opaque)
+        public float freezeMult = 0.2f;
                 
         [System.Obsolete]
         public float forwardFieldWidth = 1;         //< Marge d'erreur pour viser 'tout droit'    
@@ -59,6 +60,7 @@ public class Game : MonoBehaviour
         public Monster[] monsterPrefabs;            //< Prefab des unités ennemies
         public GameObject lifeBarPrefab;            //< Prefab des barres de vie
         public Item[] itemsPrefab;                  //< Prefab des items
+        public GameObject freezeFeedbackPrefab;     //< Prefab du gel
 
         public GIZMOSTYPE GizmosType;
     }

@@ -57,5 +57,7 @@ public class ColdWeapon : Weapon
     {
         if (this.ellapsedTime >= this.realspeed)
             this.gameObject.SetActive(false);
+
+        base.Hit();
     }
 }

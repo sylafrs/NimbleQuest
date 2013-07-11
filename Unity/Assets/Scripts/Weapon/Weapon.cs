@@ -12,25 +12,38 @@ public abstract class Weapon : MonoBehaviour {
     protected Transform target;
     protected float speed;
     protected float distance;
-    protected System.Action callback;
+    protected System.Action onTargetReached;
+    protected System.Action onHit;
 
     public virtual void Init(Unit u) {
         this.speed = u.attackSpeed;
+        this.distance = 0;
+        this.onTargetReached = null;
+        this.onHit = null;
     }
         
     public void OnDistanceLessThan(float distance, System.Action callback)
     {
         this.distance = distance;
-        this.callback = callback;
+        this.onTargetReached = callback;
     }
     
     public virtual void Fire(Transform target) { /* Nothing by default */ }
-    protected virtual void Hit() { /* Nothing by default */ }
+
+    protected virtual void Hit() {
+        if (onHit != null)        
+            onHit();        
+    }
+
+    public void OnHit(System.Action callback)
+    {
+        onHit = callback;
+    }
     
     protected virtual void TargetReached()
     {
         Hit();
-        if (callback != null)
-            callback();
+        if (onTargetReached != null)
+            onTargetReached();
     }    
 }

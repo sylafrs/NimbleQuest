@@ -53,13 +53,13 @@ MonoBehaviour:
     distanceRatio: 10
     minMonsterRotationTime: .200000003
     timeShowingLife: 5
+    freezeMult: .200000003
     forwardFieldWidth: 4
     itemSize: 2
     itemTime: 10
     ChancesOverTenToGetItem: 5
     dontMoveHero: 0
-    dontKillWithWalls: 0
-    undeadMode: 0
+    undeadMode: 1
     spawnChancesOverTime:
       serializedVersion: 2
       m_Curve:
@@ -97,6 +97,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 45a83efee0cd5014bb57f6a4353ae276, type: 2}
     - {fileID: 11400000, guid: 30dbd87cb3d319a488134849edd75f16, type: 2}
     - {fileID: 11400000, guid: 76dd6ded890940940a0bad6a3833e4f2, type: 2}
+    freezeFeedbackPrefab: {fileID: 100006, guid: 42423e011a920754f9dfbd6cf61fcee9,
+      type: 2}
     GizmosType: 2
 --- !u!1001 &100100000
 Prefab:
