@@ -23,6 +23,9 @@ public abstract class Item : MonoBehaviour {
 
     void Update()
     {
+        if (Game.state != Game.State.PLAYING)
+            return;
+
         Vector3 leaderPos = Game.heroicGroup.leader.transform.position;  
         if (RectUtility.ContainsXZ(itemZone, leaderPos))
         {

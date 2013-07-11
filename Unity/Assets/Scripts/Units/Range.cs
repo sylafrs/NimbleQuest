@@ -116,10 +116,15 @@ public class Range {
                     ShowCircle(u.transform.position, u.transform.forward, u.transform.right, u.range.angle, u.range.distance);
                     break;
                 case FIELD.FORWARD:
-                    Vector3 maxPos = u.transform.position + (u.transform.forward * u.range.distance * Game.settings.distanceRatio);                    
-                    Gizmos.DrawLine(u.transform.position + (u.transform.right * Game.settings.forwardFieldWidth), u.transform.position - (u.transform.right * Game.settings.forwardFieldWidth));
-                    Gizmos.DrawLine(u.transform.position, maxPos);
-                    Gizmos.DrawLine(maxPos + (u.transform.right * Game.settings.forwardFieldWidth), maxPos - (u.transform.right * Game.settings.forwardFieldWidth));
+                    Vector3 pos = u.transform.position + (u.transform.forward * u.range.distance * Game.settings.distanceRatio);                    
+
+                    Unit t = GetForwardUnit(u);
+                    if (t)
+                    {
+                        pos = t.transform.position;
+                    }
+
+                    Gizmos.DrawLine(u.transform.position, pos);    
                     break;
 
                 case FIELD.GROUP:
@@ -135,6 +140,54 @@ public class Range {
         }
     }
 
+    public static Unit GetNearestUnitInRange(Unit u, List<Unit> targets)
+    {
+        List<Unit> units = FilterUnitsInRange(u, targets);
+        Unit nearest = MyMonoBehaviour.GetNearest<Unit>(u, targets);        
+        return nearest;
+    }
+
+    public static List<Unit> FilterUnitsInRange(Unit u, List<Unit> targets, bool every = false)
+    {
+        List<Unit> inRange = new List<Unit>();
+        switch (u.range.field)
+        {
+            case FIELD.CIRCLE:
+                // Get units in range
+                foreach (var t in targets)
+                {
+                    if (IsInCircle(u, t))
+                    {
+                        inRange.Add(t);
+                    }
+                }
+
+                // Get nearest unit only
+                if(!every)
+                {
+                    List<Unit> wasInRange = inRange;
+                    inRange = new List<Unit>();
+                    inRange.Add(MyMonoBehaviour.GetNearest<Unit>(u, wasInRange));
+                }
+                break;
+
+            case FIELD.FORWARD:
+                Unit f = GetForwardUnit(u);
+                if (targets.Contains(f))
+                {
+                    inRange.Add(f);
+                }
+                break;
+
+            case FIELD.GROUP:
+                inRange = targets;
+                break;
+        }
+
+        return inRange;
+    }
+
+    [System.Obsolete("Use FilterUnitsInRange instead")]
     public static bool IsInRange(Unit u, Unit target)
     {
         switch (u.range.field)
@@ -182,6 +235,7 @@ public class Range {
         return (angle <= u.range.angle / 2);
     }
 
+    [System.Obsolete("Use GetForwardUnit instead")]
     private static bool IsForward(Unit u, Unit target, float epsilon = 0.2f)
     {   
         // First step : field.
@@ -198,5 +252,23 @@ public class Range {
         Vector3 ortho = trans - project;
 
         return (project.normalized == forward) && (ortho.sqrMagnitude < epsilon);
+    }
+
+    private static Unit GetForwardUnit(Unit u)
+    {
+        RaycastHit shooted;
+        bool hit = Physics.Raycast(
+            u.transform.position,
+            OrientationUtility.ToVector3(u.orientation),
+            out shooted,
+            u.range.distance * Game.settings.distanceRatio
+        );        
+
+        if (hit)
+        {            
+            return shooted.transform.GetComponent<Unit>();
+        }
+
+        return null;
     }
 }

@@ -43,13 +43,15 @@ public class Game : MonoBehaviour
         public float distanceRatio = 1;             //< Ratio pour la range
         public float minMonsterRotationTime = 0.2f; //< Temps minimal que doit attendre un monstre pour changer d'orientation (Prioritaire aux collisions)
         public float timeShowingLife = 5;           //< Temps durant lequel on montre la vie (opaque)
+                
+        [System.Obsolete]
         public float forwardFieldWidth = 1;         //< Marge d'erreur pour viser 'tout droit'    
+       
         public float itemSize = 1;                  //< Taille d'un item (pour passer dessus. utilise distanceRatio)
         public float itemTime = 10;                 //< Durée d'apparition maximale d'un objet
         public float ChancesOverTenToGetItem = 5;   //< La chance d'avoir un item (/10)
 
         public bool dontMoveHero = false;           //< Empêche le héros de bouger
-        public bool dontKillWithWalls = false;      //< Empêche le héros de mourir en traversant les murs.
         public bool undeadMode = false;                //< Empêche de mourir.. ..si on a plus de vie
 
         public AnimationCurve spawnChancesOverTime; //< Courbe : Chances qu'un monstre spawn dans le temps, une fois le temps min. dépassé.
@@ -276,9 +278,9 @@ public class Game : MonoBehaviour
 
     public static void OnUnitHitsWall(Unit u)
     {
-        if (u is Hero && u.IsLeader && !Game.settings.dontKillWithWalls)
+        if (u is Hero && u.IsLeader)
             u.ReceiveAttack(AttackType.DAMAGES, 10000);
-        else if (!Game.settings.dontKillWithWalls)
+        else
             Debug.Log(u.name + " hits a wall");
     }
 

@@ -182,7 +182,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100018}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 10.6396389, y: -1.07805634, z: -2.03714466}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400020}
@@ -463,7 +463,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 3
   m_Type: 2
-  m_Color: {r: 1, g: .613192797, b: .186567187, a: 1}
+  m_Color: {r: .791044772, g: 0, b: .713600039, a: 1}
   m_Intensity: 1.10810816
   m_Range: 6.11444902
   m_SpotAngle: 30

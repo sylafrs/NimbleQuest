@@ -1,3 +1,5 @@
+//#define GUI_ACTIVE
+
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -26,7 +28,8 @@ public abstract class Unit : MyMonoBehaviour {
     public Weapon weapon;
 
     protected float speed;
-    
+
+    private bool reload;
     private float remainingCooldown;
 
     private int health;
@@ -77,6 +80,7 @@ public abstract class Unit : MyMonoBehaviour {
 
     protected virtual void Start()
     {
+        this.reload = false;
         this.health = this.maxHealth;
         this.AttachLifeBar();
         if(this.weapon)
@@ -113,22 +117,27 @@ public abstract class Unit : MyMonoBehaviour {
     {
         if (target.health == 0 && type == AttackType.DAMAGES)
             return false;
-
+        
         if (target.health == target.maxHealth && type == AttackType.HEAL)
             return false;
-
-        this.remainingCooldown = this.cooldown;
+        
+        this.reload = true;
+        this.remainingCooldown = this.cooldown;        
                 
         if (weapon)
-        {
+        {            
             weapon.OnDistanceLessThan(0.1f, () =>
             {
                 target.ReceiveAttack(this.type, this.force);
+                this.reload = false;
             });
 
             weapon.Fire(target.transform);
             return true;
-        }        
+        }
+
+        this.reload = false;
+        this.remainingCooldown += this.attackSpeed;
 
         Debug.Log("I (" + this.name + ") need a weapon");
         target.ReceiveAttack(this.type, this.force);
@@ -159,8 +168,8 @@ public abstract class Unit : MyMonoBehaviour {
 
         if (this.health == 0)
         {
-            // Little cheat : undead mode :)
-            if ((!(this is Hero) || !IsLeader && !Game.settings.undeadMode))
+            // Little cheat : undead mode :)            
+            if (!(this is Hero && this.IsLeader && Game.settings.undeadMode))
             {
                 this.OnDying();
                 return;
@@ -195,57 +204,40 @@ public abstract class Unit : MyMonoBehaviour {
 
     private void UpdateWeapon()
     {
-        remainingCooldown -= Time.deltaTime;
-        if (remainingCooldown < 0)
+        if (!this.reload)
         {
-            if (this.range.field == Range.FIELD.GROUP)
+            remainingCooldown -= Time.deltaTime;
+        
+            if (remainingCooldown < 0)
             {
-                List<Unit> units = this.GetTargetsInRange();
+                List<Unit> units = Range.FilterUnitsInRange(this, this.GetTargets());
+                        
                 foreach (var u in units)
                 {
-                    if(this.Attack(u))
-                        break; // Otherwise the healer is really too cheated !
-                }
-            }
-            else
-            {
-                Unit u = this.GetNearestTargetInRange();
-                if (u)
-                {
-                    this.Attack(u);
-                }
+                    if (u != null && this.Attack(u))
+                        break;
+                }           
             }
         }
     }
-
-    public Unit GetNearestTargetInRange()
-    {
-        List<Unit> targets = this.GetTargetsInRange();
-        Unit nearest = null;
-
-        var e = targets.GetEnumerator();
-        if(e.MoveNext()) 
-        {
-            float minDistance = Vector3.Distance(this.transform.position, e.Current.transform.position);
-            nearest = e.Current;            
-
-            while (e.MoveNext())
-            {
-                float distance = Vector3.Distance(this.transform.position, e.Current.transform.position);
-                if (distance < minDistance)
-                {
-                    nearest = e.Current;
-                    minDistance = distance;
-                }
-            }
-        }
-
-        return nearest;
-    }
-
+   
     public abstract List<Group> GetEnemies();
 
-    public List<Group> GetTargets()
+    public List<Unit> GetTargets()
+    {
+        List<Unit> units = new List<Unit>();
+
+        List<Group> groups = this.GetTargetGroups();
+        foreach (Group g in groups)
+        {
+            units.Add(g.leader);
+            units.AddRange(g.fellows);
+        }
+
+        return units;
+    }
+
+    public List<Group> GetTargetGroups()
     {
         List<Group> g = null;
 
@@ -262,10 +254,11 @@ public abstract class Unit : MyMonoBehaviour {
         return g;
     }
 
+    [System.Obsolete("Use Range.FilterUnitsInRange instead")]
     public List<Unit> GetTargetsInRange()
     {
         List<Unit> inRangeUnits = new List<Unit>();
-        List<Group> targets = GetTargets();
+        List<Group> targets = GetTargetGroups();
         foreach (var g in targets)
         {
             if (Range.IsInRange(this, g.leader))
@@ -482,11 +475,13 @@ public abstract class Unit : MyMonoBehaviour {
         base.DestroyObject();
     }
 
-    //public void OnGUI()
-    //{
-    //    if (IsLeader)
-    //    {
-    //        this.group.OnGUI();
-    //    }
-    //}
+#if GUI_ACTIVE
+    public void OnGUI()
+    {
+        if (IsLeader)
+        {
+            this.group.OnGUI();
+        }
+    }
+#endif
 }

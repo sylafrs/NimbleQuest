@@ -58,8 +58,8 @@ MonoBehaviour:
     itemTime: 10
     ChancesOverTenToGetItem: 5
     dontMoveHero: 0
-    dontKillWithWalls: 1
-    undeadMode: 1
+    dontKillWithWalls: 0
+    undeadMode: 0
     spawnChancesOverTime:
       serializedVersion: 2
       m_Curve:

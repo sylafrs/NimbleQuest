@@ -9,8 +9,17 @@ using System.Collections.Generic;
   */
 public class Freeze : Item
 {
+    public int power = 5;
+
     protected override void DoFunction()
     {
-        /* Does nothing in particular */
+        foreach (MonsterGroup mg in Game.monsterGroups)
+        {
+            mg.leader.ReceiveAttack(AttackType.SLOW, power);
+            foreach (Monster m in mg.fellows)
+            {
+                m.ReceiveAttack(AttackType.SLOW, power);
+            }
+        }
     }   
 }

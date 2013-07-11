@@ -53,12 +53,21 @@ public static class RectUtility {
 
     public static Rect FromCenter(Vector3 center, float size)
     {
-        return FromCenter(center, size, size);
+        float s2 = size / 2;
+        return FromCenter2(center, s2, s2);
     }
 
     public static Rect FromCenter(Vector3 center, float width, float height)
     {
-        return Rect.MinMaxRect(center.x - width / 2, center.z - height / 2, center.x + width / 2, center.z + height / 2);
+        float w2 = width / 2;
+        float h2 = height / 2;
+        return FromCenter2(center, w2, h2);
+    }
+
+    // Avoid useless divisions
+    private static Rect FromCenter2(Vector3 center, float w2, float h2)
+    {
+        return Rect.MinMaxRect(center.x - w2, center.z - h2, center.x + w2, center.z + h2);
     }
 
     public static bool ContainsXZ(Rect r, Vector3 p)

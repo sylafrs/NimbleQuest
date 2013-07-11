@@ -16,7 +16,7 @@ public class Pivot : MonoBehaviour {
         Vector3 scale = this.transform.localScale;
         scale.z = range;
         this.transform.localScale = scale;
-
+        
         Vector3 pos = this.transform.localPosition;
         pos.z = distanceRatio * range;
         this.transform.localPosition = pos;
